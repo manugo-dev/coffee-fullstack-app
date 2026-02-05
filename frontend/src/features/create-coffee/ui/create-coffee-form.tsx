@@ -8,6 +8,7 @@ import { Modal } from "@/shared/ui/modal";
 import { Input } from "@/shared/ui/input";
 import { ButtonSelector } from "@/shared/ui/button-selector";
 import { Button } from "@/shared/ui/button";
+import { useToast } from "@/shared/ui/toast";
 
 import { createCoffeeSchema, type CreateCoffeeFormData } from "../model/schema";
 import { COFFEE_TYPE_OPTIONS, DEFAULT_FORM_VALUES } from "../model/constants";
@@ -20,13 +21,13 @@ interface CreateCoffeeFormProps {
 
 export function CreateCoffeeForm({ isOpen, onClose }: CreateCoffeeFormProps) {
   const createCoffee = useCreateCoffee();
+  const { showToast } = useToast();
 
   const {
     register,
     control,
     handleSubmit,
     reset,
-    setError,
     formState: { errors },
   } = useForm<CreateCoffeeFormData>({
     resolver: yupResolver(createCoffeeSchema),
@@ -44,10 +45,11 @@ export function CreateCoffeeForm({ isOpen, onClose }: CreateCoffeeFormProps) {
       reset();
       onClose();
     } catch (error) {
-      setError("root", {
-        message:
-          error instanceof Error ? error.message : "Failed to create coffee",
-      });
+      const message =
+        error instanceof Error ? error.message : "Failed to create coffee";
+      showToast(message, "error");
+      reset();
+      onClose();
     }
   };
 
@@ -80,12 +82,13 @@ export function CreateCoffeeForm({ isOpen, onClose }: CreateCoffeeFormProps) {
         <Controller
           name="type"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <ButtonSelector
               label="Type"
               options={COFFEE_TYPE_OPTIONS}
               value={field.value as CoffeeType}
               onChange={field.onChange}
+              error={fieldState.error?.message}
             />
           )}
         />
@@ -101,7 +104,6 @@ export function CreateCoffeeForm({ isOpen, onClose }: CreateCoffeeFormProps) {
           error={errors.description?.message}
           {...register("description")}
         />
-        {errors.root && <p className={styles.error}>{errors.root.message}</p>}
         <div className={styles.actions}>
           <Button
             type="button"

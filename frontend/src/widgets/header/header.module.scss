@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   z-index: var(--z-header);
-  padding: var(--space-md) 0;
+  padding: var(--space-lg) 0;
   background-color: var(--color-bg-header);
   transition: background-color var(--transition-base);
   border-bottom: 1px solid transparent;
@@ -32,7 +32,11 @@
   justify-content: space-between;
   max-width: var(--page-max-width);
   margin: 0 auto;
-  padding: 0 var(--space-2xl);
+  padding: 0 var(--space-xl);
+
+  @include from-breakpoint(md) {
+    padding: 0 var(--space-2xl);
+  }
 }
 
 .logo {

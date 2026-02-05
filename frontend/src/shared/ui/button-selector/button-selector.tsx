@@ -2,6 +2,7 @@
 
 import type { ButtonSelectorProps } from "./button-selector.types";
 import styles from "./button-selector.module.scss";
+import { cn } from "@/shared/lib/classnames";
 
 export function ButtonSelector<T extends string>({
   options,
@@ -9,6 +10,7 @@ export function ButtonSelector<T extends string>({
   onChange,
   label,
   className,
+  error,
 }: ButtonSelectorProps<T>) {
   return (
     <div className={`${styles.field}${className ? ` ${className}` : ""}`}>
@@ -20,6 +22,7 @@ export function ButtonSelector<T extends string>({
             type="button"
             className={styles.button}
             data-selected={value === option.value}
+            data-error={!!error}
             onClick={() => onChange(option.value)}
             aria-pressed={value === option.value}
           >
@@ -27,6 +30,7 @@ export function ButtonSelector<T extends string>({
           </button>
         ))}
       </div>
+      {error && <p className={styles.error}>{error}</p>}
     </div>
   );
 }

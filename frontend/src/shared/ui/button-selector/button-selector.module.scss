@@ -40,4 +40,13 @@
     background-color: var(--color-bg-transparent);
     border-color: var(--color-text-primary);
   }
+
+  &[data-error="true"] {
+    border-color: var(--color-error);
+  }
+}
+
+.error {
+  color: var(--color-error);
+  font-size: var(--font-size-xs);
 }

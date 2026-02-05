@@ -9,4 +9,5 @@ export interface ButtonSelectorProps<T extends string> {
   onChange: (value: T) => void;
   label?: string;
   className?: string;
+  error?: string;
 }
