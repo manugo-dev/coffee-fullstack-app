@@ -5,6 +5,7 @@ import {
   IsPositive,
   IsString,
   IsUrl,
+  Max,
   MaxLength,
 } from "class-validator";
 
@@ -12,6 +13,9 @@ export enum CoffeeTypeDto {
   ARABIC = "arabic",
   ROBUSTA = "robusta",
 }
+
+// PostgreSQL DECIMAL(10,2) max value
+const MAX_PRICE = 99_999_999.99;
 
 export class CreateCoffeeDto {
   @IsString()
@@ -31,6 +35,7 @@ export class CreateCoffeeDto {
 
   @IsNumber({ maxDecimalPlaces: 2 })
   @IsPositive()
+  @Max(MAX_PRICE, { message: `price cannot exceed ${MAX_PRICE}` })
   price: number;
 
   @IsUrl()
