@@ -15,7 +15,7 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get()
+  @Get("coffee")
   getItems() {
     return this.prisma.coffee.findMany();
   }
