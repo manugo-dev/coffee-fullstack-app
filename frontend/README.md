@@ -1,22 +1,59 @@
-# Coffee and Tee List - MVST challenge Frontend
+# MVST Coffee - Frontend
 
-This is a basic Next.js application. It includes Tailwind for styling, but feel free to use a styling library of choice (or pure CSS!). However, please refrain from using a full-fledged component library like MaterialUI or Bootstrap. We want you to show us your CSS skills! 😎
+Next.js application following **Feature Sliced Design (FSD)** architecture.
 
-Also, we've added some boilerplate code, but (please) feel free to make it your own.
+## Tech Stack
+
+- **Next.js 16** - React framework with App Router
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **SCSS Modules** - Scoped styling
+- **TanStack Query** - Server state management
+- **Axios** - HTTP client
+- **React Hook Form + Yup** - Form handling and validation
+- **Motion** - Animations
+
+## Project Structure (FSD)
+
+```
+src/
+├── app/              # Next.js App Router (pages, layout, providers)
+├── views/            # Page-level components
+├── widgets/          # Complex UI blocks (Header, Footer, Hero)
+├── features/         # User interactions (create-coffee)
+├── entities/         # Business entities (coffee)
+└── shared/           # Reusable code (ui, api, lib, styles)
+```
+
+## Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server (port 3000)
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+## Environment Variables
+
+Create `.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
 
 ## Scripts
 
-The following scripts are here to help you get up and running in a development environment as quickly as possible.
-
-### Installation
-
-```bash
-$ yarn install
-```
-
-### Running the project in development mode
-
-```bash
-# Will run on port 3000
-$ yarn dev
-```
+| Command         | Description      |
+| --------------- | ---------------- |
+| `npm run dev`   | Start dev server |
+| `npm run build` | Production build |
+| `npm run start` | Start production |
+| `npm run lint`  | Run ESLint       |
