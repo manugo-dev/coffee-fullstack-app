@@ -5,7 +5,7 @@ import type {
   CoffeeFilters,
   CoffeeListResponse,
   CreateCoffeeDto,
-} from "../model";
+} from "../model/types";
 
 export const COFFEES_KEY = "coffees";
 

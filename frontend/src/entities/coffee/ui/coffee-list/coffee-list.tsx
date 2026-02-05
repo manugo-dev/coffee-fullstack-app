@@ -2,13 +2,17 @@
 
 import { useState } from "react";
 
-import { Pagination } from "@/shared/ui/pagination";
+import { Pagination } from "@/shared/ui";
 
-import { getCoffees } from "../../api";
-import type { CoffeeFilters, CoffeeListResponse } from "../../model";
+import { getCoffees } from "../../api/coffee-api";
+import type { CoffeeFilters, CoffeeListResponse } from "../../model/types";
 import { CoffeeCard } from "../coffee-card/coffee-card";
-import type { CoffeeListProps } from "./coffee-list.types";
 import styles from "./coffee-list.module.scss";
+
+interface CoffeeListProps {
+  initialData: CoffeeListResponse;
+  initialFilters?: CoffeeFilters;
+}
 
 export function CoffeeList({
   initialData,
@@ -51,7 +55,6 @@ export function CoffeeList({
           <CoffeeCard key={coffee.id} coffee={coffee} />
         ))}
       </div>
-
       <Pagination
         currentPage={page}
         totalPages={totalPages}
