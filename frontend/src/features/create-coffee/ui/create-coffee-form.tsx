@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useCreateCoffee, type CoffeeType } from "@/entities/coffee";
 import { Modal } from "@/shared/ui/modal";
-import { Input } from "@/shared/ui/input";
+import { Input, PriceInput } from "@/shared/ui/input";
 import { ButtonSelector } from "@/shared/ui/button-selector";
 import { Button } from "@/shared/ui/button";
 import { useToast } from "@/shared/ui/toast";
@@ -67,16 +67,19 @@ export function CreateCoffeeForm({ isOpen, onClose }: CreateCoffeeFormProps) {
             error={errors.name?.message}
             {...register("name")}
           />
-          <Input
-            className={styles.col}
-            label="Price"
-            type="number"
-            placeholder="000"
-            min={0}
-            step={0.01}
-            suffix="€"
-            error={errors.price?.message}
-            {...register("price", { valueAsNumber: true })}
+          <Controller
+            name="price"
+            control={control}
+            render={({ field, fieldState }) => (
+              <PriceInput
+                className={styles.col}
+                label="Price"
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                error={fieldState.error?.message}
+              />
+            )}
           />
         </div>
         <Controller
