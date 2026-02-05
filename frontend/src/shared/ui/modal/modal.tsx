@@ -2,17 +2,22 @@
 
 import { useEffect, useCallback } from "react";
 
-import { Button } from "../button/button";
-import { CloseIcon } from "../icons";
+import { Button } from "@/shared/ui/button";
+import { CloseIcon } from "@/shared/ui/icons";
 import type { ModalProps } from "./modal.types";
 import styles from "./modal.module.scss";
+import { cn } from "@/shared/lib/classnames";
 
 export function Modal({
   isOpen,
   onClose,
   children,
   title,
-  className,
+  className = "",
+  overlayClassName = "",
+  contentClassName = "",
+  closeClassName = "",
+  titleClassName = "",
 }: ModalProps) {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -39,13 +44,13 @@ export function Modal({
 
   return (
     <div
-      className={styles.overlay}
+      className={cn(styles.overlay, overlayClassName)}
       data-open={isOpen}
       onClick={onClose}
       role="presentation"
     >
       <div
-        className={`${styles.modal}${className ? ` ${className}` : ""}`}
+        className={cn(styles.modal, className)}
         data-open={isOpen}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
@@ -53,9 +58,8 @@ export function Modal({
         aria-labelledby={title ? "modal-title" : undefined}
       >
         <Button
-          className={styles.close}
+          className={cn(styles.close, closeClassName)}
           variant="ghost"
-          iconOnly
           onClick={onClose}
           aria-label="Close modal"
         >
@@ -63,12 +67,12 @@ export function Modal({
         </Button>
 
         {title && (
-          <h2 id="modal-title" className={styles.title}>
+          <h2 id="modal-title" className={cn(styles.title, titleClassName)}>
             {title}
           </h2>
         )}
 
-        <div className={styles.content}>{children}</div>
+        <div className={cn(styles.content, contentClassName)}>{children}</div>
       </div>
     </div>
   );

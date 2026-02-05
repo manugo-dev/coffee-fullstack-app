@@ -2,62 +2,61 @@
 
 import { useState } from "react";
 
-import { Pagination } from "@/shared/ui";
+import { Pagination } from "@/shared/ui/pagination";
 
-import { getCoffees } from "../../api/coffee-api";
-import type { CoffeeFilters, CoffeeListResponse } from "../../model/types";
+import { useCoffees } from "../../api/use-coffees";
+import type { CoffeeFilters } from "../../model/types";
 import { CoffeeCard } from "../coffee-card/coffee-card";
 import styles from "./coffee-list.module.scss";
+import { Spinner } from "@/shared/ui/spinner";
 
 interface CoffeeListProps {
-  initialData: CoffeeListResponse;
   initialFilters?: CoffeeFilters;
 }
 
-export function CoffeeList({
-  initialData,
-  initialFilters = {},
-}: CoffeeListProps) {
-  const [data, setData] = useState<CoffeeListResponse>(initialData);
+export function CoffeeList({ initialFilters = {} }: CoffeeListProps) {
   const [filters, setFilters] = useState<CoffeeFilters>(initialFilters);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchData = async (newFilters: CoffeeFilters) => {
-    setError(null);
-    try {
-      const response = await getCoffees(newFilters);
-      setData(response);
-      setFilters(newFilters);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load coffees");
-    }
-  };
+  const {
+    data: coffeesResponse,
+    error,
+    isError,
+    isLoading,
+    isFetching,
+  } = useCoffees(filters);
 
   const handlePageChange = (page: number) => {
-    fetchData({ ...filters, page });
+    setFilters((prev) => ({ ...prev, page }));
   };
 
-  const coffees = data.data;
-  const { page, totalPages } = data.meta;
-
-  if (error) {
-    return <p data-error="true">{error}</p>;
+  if (isError) {
+    return (
+      <p data-error="true">
+        {error instanceof Error ? error.message : "Failed to load coffees"}
+      </p>
+    );
   }
 
-  if (coffees.length === 0) {
-    return <p>No coffees found</p>;
+  if (!coffeesResponse || coffeesResponse.data.length === 0) {
+    return <div className={styles.empty}>No coffees found</div>;
   }
 
   return (
-    <div className={styles.list}>
+    <div
+      className={styles.list}
+      data-fetching={isFetching || isLoading || undefined}
+    >
+      <div className={styles.spinner}>
+        <Spinner />
+      </div>
       <div className={styles.grid}>
-        {coffees.map((coffee) => (
+        {coffeesResponse.data.map((coffee) => (
           <CoffeeCard key={coffee.id} coffee={coffee} />
         ))}
       </div>
       <Pagination
-        currentPage={page}
-        totalPages={totalPages}
+        currentPage={coffeesResponse.meta.page}
+        totalPages={coffeesResponse.meta.totalPages}
         onPageChange={handlePageChange}
       />
     </div>

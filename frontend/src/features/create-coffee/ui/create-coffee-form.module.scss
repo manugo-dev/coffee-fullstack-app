@@ -1,0 +1,51 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sprite {
+  position: absolute;
+  bottom: 2rem;
+  left: -7rem;
+  width: 16rem;
+  height: 11rem;
+  background-image: url("/images/coffee-sprites.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  transform: rotate(30deg);
+  overflow: hidden;
+  z-index: -1;
+  display: none;
+
+  @include from-breakpoint(md) {
+    display: block;
+  }
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+
+  @include from-breakpoint(sm) {
+    flex-direction: row;
+  }
+}
+
+.col {
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  margin-top: var(--space-md);
+}
+
+.error {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  text-align: center;
+}

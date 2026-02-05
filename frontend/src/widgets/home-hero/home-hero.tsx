@@ -1,21 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 import { CreateCoffeeForm } from "@/features/create-coffee";
-import { Button } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/classnames";
 
 import styles from "./home-hero.module.scss";
 
 export function HomeHero() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const router = useRouter();
-
-  const handleSuccess = () => {
-    router.refresh();
-  };
 
   return (
     <section className={styles.hero}>
@@ -31,7 +25,6 @@ export function HomeHero() {
       <CreateCoffeeForm
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onSuccess={handleSuccess}
       />
     </section>
   );

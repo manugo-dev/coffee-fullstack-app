@@ -1,3 +1,4 @@
+import { QueryProvider } from "@/application/providers/query-provider";
 import "@/shared/styles/globals.scss";
 
 export const metadata = {
@@ -12,7 +13,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

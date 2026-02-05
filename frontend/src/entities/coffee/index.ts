@@ -1,4 +1,6 @@
-export { COFFEES_KEY, createCoffee, getCoffees } from "./api/coffee-api";
+export { coffeeKeys, createCoffee, getCoffees } from "./api/coffee-api";
+export { useCoffees } from "./api/use-coffees";
+export { useCreateCoffee } from "./api/use-create-coffee";
 
 export type {
   Coffee,

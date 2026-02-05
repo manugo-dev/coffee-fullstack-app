@@ -6,4 +6,8 @@ export interface ModalProps {
   children: ReactNode;
   title?: string;
   className?: string;
+  overlayClassName?: string;
+  contentClassName?: string;
+  closeClassName?: string;
+  titleClassName?: string;
 }
