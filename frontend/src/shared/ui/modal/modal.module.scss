@@ -1,0 +1,63 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  background-color: rgb(0 0 0 / 90%);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+
+  &[data-open="true"] {
+    opacity: 1;
+  }
+}
+
+.modal {
+  position: relative;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--modal-width);
+  max-height: calc(100vh - var(--space-xl) * 2);
+  padding: var(--space-xl);
+  overflow-y: auto;
+  background-color: var(--color-bg-secondary);
+  transform: translateY(20px);
+  transition: transform var(--transition-base);
+
+  &[data-open="true"] {
+    transform: translateY(0);
+  }
+
+  @include from-breakpoint(md) {
+    padding: var(--space-6xl) var(--space-8xl);
+  }
+}
+
+.close {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+}
+
+.title {
+  margin: 0 0 var(--space-xl);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-2xl);
+  font-family: var(--font-display);
+  text-align: center;
+  text-transform: uppercase;
+
+  @include from-breakpoint(md) {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+.content {
+  flex: 1;
+}
