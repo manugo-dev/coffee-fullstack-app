@@ -1,0 +1,63 @@
+@use "@/shared/styles/normalize";
+@use "@/shared/styles/variables";
+@import "@fontsource/poppins/latin.css";
+@import "@fontsource/bebas-neue/latin.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.section-title {
+  margin: 0 0 var(--space-xl);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-regular);
+  font-size: var(--font-size-3xl);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  text-align: center;
+}

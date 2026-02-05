@@ -1,15 +1,39 @@
-import { Card } from '@/components/Card';
-import { fetchItems } from '@/services/fetchItems';
+import { Coffee, CoffeeCard, getCoffees } from "@/entities/coffee";
+
+import styles from "./page.module.scss";
+import { cn } from "@/shared/lib/classnames";
 
 export default async function Home() {
-  const items = await fetchItems();
+  let coffees: Coffee[] = [];
+  let error: string | null = null;
+
+  try {
+    const response = await getCoffees();
+    coffees = response.data;
+  } catch (e) {
+    error = e instanceof Error ? e.message : "Unexpected error";
+  }
 
   return (
-    <main className='mx-10 mt-12 px-10'>
-      <h1 className='text-3xl mb-10'>You&apos;ve got this! 🚀</h1>
-      {items.map(({ id, title, description }) => (
-        <Card key={id} title={title} description={description} />
-      ))}
+    <main className="page">
+      <div className="container">
+        <h1 className={styles.title}>Coffee Collection</h1>
+
+        <section className="container">
+          <h2 className="section-title">MVST. EXCLUSIVE Coffee</h2>
+          {error ? (
+            <p>Cannot get coffees</p>
+          ) : coffees.length === 0 ? (
+            <p>No coffees found</p>
+          ) : (
+            <div className={styles.grid}>
+              {coffees.map((coffee) => (
+                <CoffeeCard key={coffee.id} coffee={coffee} />
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
     </main>
   );
 }

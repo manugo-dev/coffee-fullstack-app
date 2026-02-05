@@ -1,0 +1,28 @@
+@use "sass:map";
+
+$breakpoints: (
+  xs: 400px,
+  sm: 640px,
+  md: 900px,
+  lg: 1280px,
+  xl: 1440px,
+);
+
+@mixin from-breakpoint($breakpoint) {
+  $size: $breakpoint;
+
+  @if map.has-key($breakpoints, $breakpoint) {
+    $size: map.get($breakpoints, $breakpoint);
+  }
+
+  @media (width >= $size) {
+    @content;
+  }
+}
+
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+}

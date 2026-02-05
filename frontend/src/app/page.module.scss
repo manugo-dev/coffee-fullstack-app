@@ -1,0 +1,10 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: var(--space-lg);
+  max-width: 100%;
+
+  @include from-breakpoint(lg) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
