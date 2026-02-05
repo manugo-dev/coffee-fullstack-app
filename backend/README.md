@@ -1,52 +1,88 @@
 # Coffee and Tee List - MVST challenge Backend
 
-## Scripts
+## Prerequisites
 
-The following scripts are here to help you get up and running in a development environment as quickly as possible.
+- Node.js (see `.nvmrc` for version)
+- Docker (for the database)
 
 ### Installation
 
 ```bash
-$ yarn install
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env
+
+# Start the database
+npm run dev:db:up
+
+# Generate Prisma client
+npm run prisma:gen
+
+# Run migrations
+npm run prisma:migrate
+
+# Seed the database
+npm run prisma:seed
 ```
 
-### Running the database with docker
-
-If you have docker installed on your machine, we have provided a script to easily spin up
-a Postgres database.
+## Development
 
 ```bash
-$ yarn start:dev:db
+# Start the server (port 5000)
+npm run start:dev
 ```
 
-### Running your own Postgres database
+## API Endpoints
 
-If you don't want to use docker, you can configure this by yourself. You will need to have Postgres installed. We will however use the Dockerfile when reviewing/running your backend code. Therefore, for us to easily run your project, please use the following configuration:
+| Method | Endpoint   | Description                                      |
+| ------ | ---------- | ------------------------------------------------ |
+| GET    | `/coffees` | List coffees (supports filtering and pagination) |
+| POST   | `/coffees` | Create a new coffee                              |
+
+### Query Parameters (GET /coffees)
+
+| Parameter | Type                  | Default | Description             |
+| --------- | --------------------- | ------- | ----------------------- |
+| `type`    | `arabic` \| `robusta` | -       | Filter by coffee type   |
+| `page`    | number                | 1       | Page number             |
+| `limit`   | number                | 12      | Items per page (max 50) |
+
+### Request Body (POST /coffees)
+
+```json
+{
+  "name": "string (required, unique, max 100)",
+  "description": "string (required, max 500)",
+  "type": "arabic | robusta (required)",
+  "price": "number (required, positive, max 2 decimals)",
+  "imageUrl": "string (required, valid URL)"
+}
+```
+
+## Scripts
+
+| Script                   | Description                |
+| ------------------------ | -------------------------- |
+| `npm run dev:db:up`      | Start PostgreSQL container |
+| `npm run dev:db:down`    | Stop PostgreSQL container  |
+| `npm run prisma:gen`     | Generate Prisma client     |
+| `npm run prisma:migrate` | Run database migrations    |
+| `npm run prisma:seed`    | Seed the database          |
+| `npm run start:dev`      | Start in development mode  |
+| `npm run build`          | Build for production       |
+| `npm run lint`           | Run ESLint                 |
+| `npm test`               | Run unit tests             |
+
+## Database Configuration
+
+The Docker container uses the following defaults (configurable via `.env`):
 
 ```
-host: 'localhost'
-port: 5432
-username: 'postgres'
-password: '1234'
-database: 'mvst-coffee-challenge-db'
-```
-
-### Running the project in development mode
-
-```bash
-# Will run on port 5000
-$ yarn start:dev
-```
-
-### Test
-
-```bash
-# unit tests
-$ yarn test
-
-# e2e tests
-$ yarn test:e2e
-
-# test coverage
-$ yarn test:cov
+Host: localhost
+Port: 5433
+User: postgres
+Password: 1234
+Database: mvst-coffee-challenge-db
 ```
