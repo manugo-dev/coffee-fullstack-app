@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { Pagination } from "@/shared/ui/pagination";
 import { Tabs, type TabOption } from "@/shared/ui/tabs";
 import { Spinner } from "@/shared/ui/spinner";
 
@@ -10,6 +9,9 @@ import { useCoffees } from "../../api/use-coffees";
 import type { CoffeeFilters, CoffeeType } from "../../model/types";
 import { CoffeeCard } from "../coffee-card/coffee-card";
 import styles from "./coffee-list.module.scss";
+import { Pagination } from "@/shared/ui/pagination";
+import { cn } from "@/shared/lib/classnames";
+import { WarningIcon } from "@/shared/ui/icons";
 
 type FilterType = "all" | CoffeeType;
 
@@ -51,12 +53,19 @@ export function CoffeeList({ initialFilters = {} }: CoffeeListProps) {
   };
 
   if (isError) {
+    const message =
+      error instanceof Error ? error.message : "Failed to load coffees";
     return (
-      <p data-error="true">
-        {error instanceof Error ? error.message : "Failed to load coffees"}
-      </p>
+      <div className={cn(styles.wrapper, styles.empty)} data-error="true">
+        <WarningIcon size={56} />
+        <p>{message}</p>
+      </div>
     );
   }
+
+  const coffees = coffeesResponse?.data ?? [];
+  const hasCoffees = coffees.length > 0;
+  const showEmpty = !isLoading && !hasCoffees;
 
   return (
     <div className={styles.wrapper}>
@@ -68,25 +77,22 @@ export function CoffeeList({ initialFilters = {} }: CoffeeListProps) {
         />
       </div>
 
-      <div
-        className={styles.list}
-        data-fetching={isFetching || isLoading || undefined}
-      >
+      <div className={styles.list} data-fetching={isFetching || undefined}>
         <div className={styles.spinner}>
           <Spinner />
         </div>
 
-        {!coffeesResponse || coffeesResponse.data.length === 0 ? (
-          <div className={styles.empty}>No coffees found</div>
-        ) : (
+        {showEmpty && <div className={styles.empty}>No coffees found</div>}
+
+        {hasCoffees && coffeesResponse && (
           <>
             <div className={styles.grid}>
-              {coffeesResponse.data.map((coffee) => (
+              {coffees.map((coffee) => (
                 <CoffeeCard key={coffee.id} coffee={coffee} />
               ))}
             </div>
             <Pagination
-              currentPage={coffeesResponse.meta.page}
+              currentPage={filters.page || coffeesResponse.meta.page}
               totalPages={coffeesResponse.meta.totalPages}
               onPageChange={handlePageChange}
             />

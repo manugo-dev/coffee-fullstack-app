@@ -1,0 +1,53 @@
+.footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 15rem;
+  overflow: hidden;
+  margin-top: 5rem;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  background-image: url("/images/coffee-sprites.png");
+  background-size: 18rem;
+  background-position: top;
+  background-repeat: repeat;
+  z-index: 0;
+
+  @include from-breakpoint(md) {
+    background-size: 20rem;
+  }
+}
+
+.background_overlay {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background-image: url("/images/coffee-sprites.png");
+  background-size: 15rem;
+  top: 50%;
+  z-index: 10;
+  background-repeat: repeat;
+
+  @include from-breakpoint(md) {
+    background-size: 18rem;
+  }
+}
+
+.content {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  z-index: 5;
+}
+
+.logo {
+  width: auto;
+  height: 5rem;
+}

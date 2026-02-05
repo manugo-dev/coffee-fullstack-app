@@ -56,10 +56,14 @@ a {
   margin: 0 0 var(--space-xl);
   color: var(--color-text-primary);
   font-weight: var(--font-weight-regular);
-  font-size: var(--font-size-3xl);
+  font-size: var(--font-size-2xl);
   font-family: var(--font-display);
   text-transform: uppercase;
   text-align: center;
+
+  @include from-breakpoint(md) {
+    font-size: var(--font-size-3xl);
+  }
 }
 
 .button {

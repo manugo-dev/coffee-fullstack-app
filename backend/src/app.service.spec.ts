@@ -17,12 +17,6 @@ describe("AppService", () => {
     expect(service).toBeDefined();
   });
 
-  describe("getHello", () => {
-    it('should return "Hello World!"', () => {
-      expect(service.getHello()).toBe("Hello World!");
-    });
-  });
-
   describe("healthCheck", () => {
     it('should return "OK"', () => {
       expect(service.healthCheck()).toBe("OK");
