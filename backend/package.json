@@ -76,10 +76,27 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "moduleNameMapper": {
+      "^~prisma/client$": "<rootDir>/../generated/prisma",
+      "^prisma.config$": "<rootDir>/../prisma.config"
+    },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.ts",
+      "!**/node_modules/**",
+      "!**/*.module.ts",
+      "!**/main.ts",
+      "!**/dto/index.ts",
+      "!**/prisma/prisma.service.ts"
     ],
     "coverageDirectory": "../coverage",
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
     "testEnvironment": "node"
   }
 }

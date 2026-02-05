@@ -4,20 +4,32 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 
 describe("AppController", () => {
-  let appController: AppController;
+  let controller: AppController;
+  let service: AppService;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
       providers: [AppService],
     }).compile();
 
-    appController = app.get<AppController>(AppController);
+    controller = module.get<AppController>(AppController);
+    service = module.get<AppService>(AppService);
   });
 
-  describe("root", () => {
+  it("should be defined", () => {
+    expect(controller).toBeDefined();
+  });
+
+  describe("getHello", () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe("Hello World!");
+      expect(controller.getHello()).toBe("Hello World!");
+    });
+  });
+
+  describe("healthCheck", () => {
+    it('should return "OK"', () => {
+      expect(controller.healthCheck()).toBe("OK");
     });
   });
 });
