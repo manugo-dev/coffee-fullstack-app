@@ -1,0 +1,27 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+enum CoffeeType {
+  arabic
+  robusta
+}
+
+model Coffee {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  description String
+  type        CoffeeType
+  price       Decimal    @db.Decimal(10,2)
+  imageUrl    String
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([type])
+}

@@ -1,10 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
-import * as sampleData from './data/sampleData';
+import { PrismaService } from './prisma/prisma.service';
 
 @Controller()
 export class AppController {
+  constructor(private prisma: PrismaService) {}
+
   @Get()
   getItems() {
-    return sampleData.items;
+    return this.prisma.coffee.findMany();
   }
 }

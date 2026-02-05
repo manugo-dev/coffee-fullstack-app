@@ -33,3 +33,10 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Development database data
+/db/data
+/generated/prisma
+
+# Environment variables
+.env
