@@ -52,7 +52,7 @@ a {
   padding: 0 var(--space-md);
 }
 
-.section-title {
+.section_title {
   margin: 0 0 var(--space-xl);
   color: var(--color-text-primary);
   font-weight: var(--font-weight-regular);
@@ -60,4 +60,32 @@ a {
   font-family: var(--font-display);
   text-transform: uppercase;
   text-align: center;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-md);
+  background: var(--color-accent);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-secondary);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-accent-hover);
+  }
+
+  &:active {
+    background: var(--color-accent-active);
+  }
+
+  &:disabled {
+    background: var(--color-accent-disabled);
+  }
 }

@@ -17,7 +17,7 @@ export function CoffeeCard({ coffee }: CoffeeCardProps) {
       <span className={styles.type} data-type={coffee.type}>
         {coffee.type}
       </span>
-      <div className={styles.imageWrapper}>
+      <div className={styles.image_wrapper}>
         <img src={coffee.imageUrl} alt={coffee.name} className={styles.image} />
       </div>
       <div className={styles.content}>
