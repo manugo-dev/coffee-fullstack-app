@@ -1,4 +1,4 @@
-import type { Coffee } from "../model";
+import type { Coffee } from "../../model";
 
 import styles from "./coffee-card.module.scss";
 

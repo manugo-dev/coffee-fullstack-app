@@ -6,4 +6,5 @@ export type {
   CoffeeType,
   CreateCoffeeDto,
 } from "./model";
-export { CoffeeCard } from "./ui";
+export { CoffeeCard } from "./ui/coffee-card/coffee-card";
+export { CoffeeList } from "./ui/coffee-list/coffee-list";
