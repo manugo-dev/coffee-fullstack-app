@@ -1,5 +1,8 @@
-import { QueryProvider } from "@/application/providers/query-provider";
 import "@/shared/styles/globals.scss";
+
+import { QueryProvider } from "@/application/providers";
+import { CreateCoffeeModalProvider } from "@/features/create-coffee";
+import { Header } from "@/widgets/header";
 
 export const metadata = {
   title: "Coffee Shop",
@@ -14,7 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <CreateCoffeeModalProvider>
+            <Header />
+            {children}
+          </CreateCoffeeModalProvider>
+        </QueryProvider>
       </body>
     </html>
   );

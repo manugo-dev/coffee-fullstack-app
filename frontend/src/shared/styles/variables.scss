@@ -33,6 +33,9 @@
   --color-bg-muted: #383838;
   --color-bg-transparent: transparent;
 
+  --color-bg-header: transparent;
+  --color-bg-header-scrolled: #000000e6;
+
   /* Text colors */
   --color-text-primary: #ffffff;
   --color-text-secondary: #bdbdbd;
@@ -128,6 +131,7 @@
   /* Z-index layers */
   --z-dropdown: 100;
   --z-sticky: 200;
+  --z-header: 250;
   --z-modal-backdrop: 300;
   --z-modal: 400;
   --z-toast: 500;

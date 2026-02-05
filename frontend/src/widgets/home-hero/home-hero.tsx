@@ -1,15 +1,13 @@
 "use client";
 
-import { useState } from "react";
-
-import { CreateCoffeeForm } from "@/features/create-coffee";
+import { useCreateCoffeeModal } from "@/features/create-coffee";
 import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/classnames";
 
 import styles from "./home-hero.module.scss";
 
 export function HomeHero() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { openModal } = useCreateCoffeeModal();
 
   return (
     <section className={styles.hero}>
@@ -18,14 +16,8 @@ export function HomeHero() {
         <p className={styles.hero_description}>
           Choose a coffee from below or create your own.
         </p>
-        <Button onClick={() => setIsModalOpen(true)}>
-          Create your own coffee
-        </Button>
+        <Button onClick={openModal}>Create your own coffee</Button>
       </div>
-      <CreateCoffeeForm
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
     </section>
   );
 }
