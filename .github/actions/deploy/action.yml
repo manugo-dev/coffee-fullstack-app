@@ -85,29 +85,24 @@ runs:
         ENV_VARS: ${{ inputs.env_vars }}
       run: |
         if [ -n "$ENV_VARS" ]; then
-          # Create .env file on server
-          ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} << 'ENVEOF'
-          set -e
-          cd "$DEPLOYMENT_PATH"
-
-          # Create .env file header
-          cat > .env << 'HEADEREOF'
-          # Generated from GitHub Secrets
-          # Do not edit manually - this file is overwritten on each deploy
-          HEADEREOF
-
-          # Add each environment variable
-          echo "$ENV_VARS" | while IFS= read -r line; do
-            if [ -n "$line" ]; then
-              # Escape special characters
-              escaped_value=$(echo "$line" | sed 's/\$/\\$/g' | sed 's/`/\\`/g' | sed 's/"/\\"/g')
-              echo "$escaped_value" >> .env
-            fi
-          done
-
-          chmod 600 .env
+          # Create .env file locally first
+          {
+            echo "# Generated from GitHub Secrets"
+            echo "# Do not edit manually - this file is overwritten on each deploy"
+            echo ""
+            echo "$ENV_VARS"
+          } > /tmp/deploy.env
+          
+          # Copy .env file to server
+          scp /tmp/deploy.env ${{ inputs.ssh_user }}@${{ inputs.ssh_host }}:$DEPLOYMENT_PATH/.env
+          
+          # Set permissions on server
+          ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} "chmod 600 $DEPLOYMENT_PATH/.env"
+          
+          # Cleanup local file
+          rm -f /tmp/deploy.env
+          
           echo ".env file created successfully"
-          ENVEOF
         else
           echo "No environment variables provided, skipping .env creation"
         fi
