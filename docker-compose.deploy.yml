@@ -1,0 +1,37 @@
+services:
+  backend:
+    image: ${BACKEND_IMAGE:?Set BACKEND_IMAGE in environment variables}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      SERVICE_PORT_BACKEND: ${SERVICE_PORT_BACKEND:-5000}
+      POSTGRES_USER: ${POSTGRES_USER:?required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?required}
+      POSTGRES_DB: ${POSTGRES_DB:?required}
+      POSTGRES_HOST: ${POSTGRES_HOST:?required}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      SERVICE_URL_FRONTEND: ${SERVICE_URL_FRONTEND:?required}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q --spider http://localhost:${SERVICE_PORT_BACKEND:-5000}/health || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    command: >
+      sh -c "npx prisma migrate deploy --config prisma.config.ts && node dist/src/main"
+
+  frontend:
+    image: ${FRONTEND_IMAGE:?Set FRONTEND_IMAGE in environment variables}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: ${SERVICE_PORT_FRONTEND:-3000}
+      HOSTNAME: "0.0.0.0"
+      SERVICE_URL_BACKEND: ${SERVICE_URL_BACKEND:?required}
+    depends_on:
+      backend:
+        condition: service_healthy

@@ -1,0 +1,83 @@
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: coffee-postgres-local
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-mvst_coffee_db}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data_local:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: coffee-backend:local
+    container_name: coffee-backend-local
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      SERVICE_PORT_BACKEND: 5000
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-mvst_coffee_db}
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      SERVICE_URL_FRONTEND: http://localhost:3000
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app
+    healthcheck:
+      test:
+        ["CMD-SHELL", "wget -q --spider http://localhost:5000/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    command: >
+      sh -c "
+        npx prisma migrate deploy --config prisma.config.ts &&
+        npm run start:prod
+      "
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: coffee-frontend:local
+    container_name: coffee-frontend-local
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      SERVICE_URL_BACKEND: http://localhost:5000
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - app
+
+volumes:
+  postgres_data_local:
+
+networks:
+  app:
+    driver: bridge

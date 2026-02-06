@@ -1,10 +1,21 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+    paths-ignore:
+      - "**.md"
+      - "LICENSE"
+      - ".gitignore"
+      - ".vscode/**"
+  workflow_call:
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   lint-and-test-backend:
@@ -18,15 +29,31 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
-          cache: 'npm'
+          node-version: "24"
+          cache: "npm"
           cache-dependency-path: backend/package-lock.json
 
+      - name: Cache backend node_modules
+        id: backend-modules
+        uses: actions/cache@v4
+        with:
+          path: backend/node_modules
+          key: backend-modules-${{ hashFiles('backend/package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.backend-modules.outputs.cache-hit != 'true'
         working-directory: ./backend
         run: npm ci
 
+      - name: Cache Prisma Client
+        id: prisma-cache
+        uses: actions/cache@v4
+        with:
+          path: backend/prisma/generated
+          key: prisma-client-${{ hashFiles('backend/prisma/schema.prisma') }}
+
       - name: Generate Prisma Client
+        if: steps.prisma-cache.outputs.cache-hit != 'true'
         working-directory: ./backend
         run: npm run prisma:gen
 
@@ -34,9 +61,13 @@ jobs:
         working-directory: ./backend
         run: npm run lint
 
+      - name: Type check backend
+        working-directory: ./backend
+        run: npm run typecheck
+
       - name: Run backend unit tests
         working-directory: ./backend
-        run: npm test
+        run: npm run test:cov
 
       - name: Run backend e2e tests
         working-directory: ./backend
@@ -57,11 +88,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
-          cache: 'npm'
+          node-version: "24"
+          cache: "npm"
           cache-dependency-path: frontend/package-lock.json
 
+      - name: Cache frontend node_modules
+        id: frontend-modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: frontend-modules-${{ hashFiles('frontend/package-lock.json') }}
+
       - name: Install dependencies
+        if: steps.frontend-modules.outputs.cache-hit != 'true'
         working-directory: ./frontend
         run: npm ci
 
@@ -81,4 +120,4 @@ jobs:
         working-directory: ./frontend
         run: npm run build
         env:
-          NEXT_PUBLIC_API_URL: http://localhost:5000
+          NEXT_PUBLIC_API_URL: __NEXT_PUBLIC_API_URL__

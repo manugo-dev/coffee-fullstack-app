@@ -18,22 +18,31 @@ const mockCoffee = {
 };
 
 const mockPrismaService = {
-  $connect: jest.fn(),
-  $disconnect: jest.fn(),
+  $connect: jest.fn().mockResolvedValue(undefined),
+  $disconnect: jest.fn().mockResolvedValue(undefined),
   coffee: {
     count: jest.fn(),
     create: jest.fn(),
     findMany: jest.fn(),
     findUnique: jest.fn(),
   },
-  onModuleDestroy: jest.fn(),
-  onModuleInit: jest.fn(),
+  onModuleDestroy: jest.fn().mockResolvedValue(undefined),
+  onModuleInit: jest.fn().mockResolvedValue(undefined),
 };
 
 describe("App (e2e)", () => {
   let app: INestApplication<App>;
 
   beforeEach(async () => {
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+
+    // Ensure mock methods return promises
+    mockPrismaService.$connect.mockResolvedValue(undefined);
+    mockPrismaService.$disconnect.mockResolvedValue(undefined);
+    mockPrismaService.onModuleInit.mockResolvedValue(undefined);
+    mockPrismaService.onModuleDestroy.mockResolvedValue(undefined);
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
@@ -55,7 +64,9 @@ describe("App (e2e)", () => {
   });
 
   afterEach(async () => {
-    await app.close();
+    if (app) {
+      await app.close();
+    }
     jest.clearAllMocks();
   });
 

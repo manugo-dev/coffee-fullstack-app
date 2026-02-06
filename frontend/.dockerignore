@@ -12,3 +12,7 @@ coverage
 .vscode
 .idea
 test
+README.md
+vitest.config.ts
+stylelint.config.mjs
+eslint.config.mjs

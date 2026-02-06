@@ -46,7 +46,8 @@ npm start
 Create `.env.local`:
 
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:3001
+# Mapped to NEXT_PUBLIC_API_URL inside the container by entrypoint.sh
+SERVICE_URL_BACKEND=http://localhost:5000
 ```
 
 ## Scripts

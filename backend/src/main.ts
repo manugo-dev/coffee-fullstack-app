@@ -8,7 +8,9 @@ async function bootstrap() {
 
   app.enableCors({
     methods: ["GET", "POST"],
-    origin: ["http://localhost:3000", process.env.FRONTEND_URL].filter(Boolean),
+    origin: ["http://localhost:3000", process.env.SERVICE_URL_FRONTEND].filter(
+      Boolean,
+    ),
   });
 
   app.useGlobalPipes(
@@ -19,7 +21,11 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ? Number(process.env.PORT) : 5000);
+  await app.listen(
+    process.env.SERVICE_PORT_BACKEND
+      ? Number(process.env.SERVICE_PORT_BACKEND)
+      : 5000,
+  );
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await

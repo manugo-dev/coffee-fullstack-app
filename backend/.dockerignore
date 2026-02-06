@@ -12,3 +12,6 @@ dist
 .vscode
 .idea
 test
+README.md
+jest.config.mjs
+eslint.config.mjs

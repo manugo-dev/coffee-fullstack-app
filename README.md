@@ -11,6 +11,23 @@ read the READMEs inside the frontend and backend folders.
 
 [Frontend README](frontend/README.md)
 
+## Local with Docker (Postgres + Backend + Frontend)
+
+```bash
+# Create .env with at least (or use defaults):
+# POSTGRES_USER=postgres
+# POSTGRES_PASSWORD=postgres
+# POSTGRES_DB=mvst_coffee_db
+
+docker compose -f docker-compose.local.yml up -d
+# Backend: http://localhost:5000  Frontend: http://localhost:3000
+```
+
+## Production URLs
+
+- Frontend: https://mvst.nugo.pro
+- Backend: https://mvst-api.nugo.pro
+
 ## Introduction
 
 This code challenge is a project that already contains a very basic backend and frontend structure.
@@ -105,11 +122,12 @@ So you are finished and feel like showing us some more? Here are a few things th
 
 ### What would you improve if given more time?
 
-Please fill
+- Add the remaining CRUD actions such as delete and edit.
+- Add authentication (login) and protect actions that require it.
 
 ### How was your experience doing this challenge?
 
-Please fill
+It was quite gratifying due to the flexibility to update and manipulate the structure, which let me make decisions and implement a more scalable architecture and folder layout. The main inconvenience was during deployment because of GitHub Actions and permissions, so I had to deploy from my personal repository.
 
 ---
 

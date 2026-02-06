@@ -1,6 +1,7 @@
 .wrapper {
   display: flex;
   width: 100%;
+  min-height: 30vh;
   flex-direction: column;
 }
 
@@ -14,6 +15,7 @@
   position: relative;
   display: flex;
   width: 100%;
+  min-height: 30vh;
   flex-direction: column;
   transition: opacity 0.2s ease;
 

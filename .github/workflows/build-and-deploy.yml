@@ -1,0 +1,85 @@
+name: Build & Deploy (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: Target environment (dev | prod)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    name: Build & Push ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    strategy:
+      matrix:
+        service: [backend, frontend]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compute image tags
+        id: tags
+        run: |
+          ENV="${{ inputs.environment }}"
+          SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          IMAGE="ghcr.io/${{ github.repository }}/${{ matrix.service }}"
+
+          echo "tags=${IMAGE}:${ENV}-latest,${IMAGE}:${ENV}-${SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Build and push ${{ matrix.service }}
+        uses: docker/build-push-action@v6
+        with:
+          context: ./${{ matrix.service }}
+          push: true
+          provenance: false
+          tags: ${{ steps.tags.outputs.tags }}
+          cache-from: type=gha,scope=${{ matrix.service }}-${{ inputs.environment }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}-${{ inputs.environment }}
+
+  deploy:
+    name: Trigger Coolify
+    needs: build-and-push
+    runs-on: self-hosted
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Trigger Coolify deployment
+        env:
+          COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK_URL }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          if [ -z "$COOLIFY_WEBHOOK" ] || [ -z "$COOLIFY_TOKEN" ]; then
+            echo "::warning::Coolify secrets not configured — skipping deployment trigger"
+            echo "Set COOLIFY_WEBHOOK_URL and COOLIFY_TOKEN in the '${{ inputs.environment }}' GitHub environment"
+            exit 0
+          fi
+
+          echo "Triggering ${{ inputs.environment }} deployment…"
+          HTTP_CODE=$(curl --silent --output /dev/stderr --write-out "%{http_code}" \
+            -H "Authorization: Bearer $COOLIFY_TOKEN" \
+            "$COOLIFY_WEBHOOK")
+
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ Deployment triggered (HTTP $HTTP_CODE)"
+          else
+            echo "::error::Coolify returned HTTP $HTTP_CODE"
+            exit 1
+          fi
