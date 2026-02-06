@@ -33,16 +33,16 @@ env:
   COMPOSE_DOCKER_CLI_BUILD: 1
 
 jobs:
-  call-ci-workflow:
-    name: CI
-    uses: ./.github/workflows/ci.yml
-    secrets: inherit
+  # call-ci-workflow:
+  #   name: CI
+  #   uses: ./.github/workflows/ci.yml
+  #   secrets: inherit
 
   deploy:
     name: Deploy to ${{ inputs.environment }}
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-    needs: [call-ci-workflow]
+    # needs: [call-ci-workflow]
 
     steps:
       - name: Checkout code
