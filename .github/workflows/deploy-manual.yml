@@ -34,11 +34,11 @@ jobs:
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.SSH_KEY }}
 
       - name: Add server to known hosts
         run: |
-          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Copy files to server
         run: |
@@ -48,11 +48,11 @@ jobs:
             --exclude '.next' \
             --exclude 'dist' \
             --exclude 'coverage' \
-            ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/srv/apps/mvst-coffee/
+            ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/apps/mvst-coffee/
 
       - name: Deploy on server
         run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
             cd /srv/apps/mvst-coffee
             
@@ -78,7 +78,7 @@ jobs:
       - name: Verify deployment
         run: |
           sleep 15
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd /srv/apps/mvst-coffee
             echo "=== Container Status ==="
             docker compose -f docker-compose.prod.yml ps
