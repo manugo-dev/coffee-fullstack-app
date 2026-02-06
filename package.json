@@ -1,0 +1,27 @@
+{
+  "name": "coffee-code-challenge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MVST Coffee Code Challenge - Monorepo",
+  "scripts": {
+    "prepare": "husky",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "npm run lint --prefix frontend",
+    "lint:backend": "npm run lint --prefix backend",
+    "format:frontend": "npm run format:fix --prefix frontend",
+    "format:backend": "npm run format --prefix backend",
+    "test:frontend": "npm run test:run --prefix frontend",
+    "test:backend": "npm run test --prefix backend"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.1",
+    "prettier": "^3.8.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
