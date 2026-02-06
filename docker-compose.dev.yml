@@ -1,18 +1,18 @@
 services:
   postgres:
     image: postgres:18-alpine
-    container_name: mvst-postgres-prod
+    container_name: mvst-postgres-dev
     restart: unless-stopped
     env_file:
-      - .env.production
+      - .env.development
       - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB:-mvst_coffee_db}
+      POSTGRES_DB: ${POSTGRES_DB:-mvst_coffee_db_dev}
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - postgres_data_prod:/var/lib/postgresql/data
+      - postgres_data_dev:/var/lib/postgresql/data
     networks:
       - edge
     healthcheck:
@@ -27,18 +27,18 @@ services:
       dockerfile: Dockerfile
       cache_from:
         - node:24-alpine
-    image: mvst-backend:prod
-    container_name: mvst-backend-prod
+    image: mvst-backend:dev
+    container_name: mvst-backend-dev
     restart: unless-stopped
     env_file:
-      - .env.production
+      - .env.development
       - .env
     environment:
-      NODE_ENV: ${NODE_ENV:-production}
+      NODE_ENV: ${NODE_ENV:-development}
       PORT: ${BACKEND_PORT:-5000}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB:-mvst_coffee_db}
+      POSTGRES_DB: ${POSTGRES_DB:-mvst_coffee_db_dev}
       POSTGRES_HOST: postgres
       POSTGRES_PORT: 5432
       FRONTEND_URL: ${FRONTEND_URL}
@@ -48,7 +48,7 @@ services:
     networks:
       - edge
     labels:
-      caddy: ${CADDY_BACKEND_LABEL:-mvst-api.nugo.dev}
+      caddy: ${CADDY_BACKEND_LABEL:-mvst-api-dev.nugo.dev}
       caddy.reverse_proxy: "{{upstreams ${BACKEND_PORT:-5000}}}"
     command: >
       sh -c "
@@ -62,8 +62,8 @@ services:
       dockerfile: Dockerfile
       cache_from:
         - node:24-alpine
-    image: mvst-frontend:prod
-    container_name: mvst-frontend-prod
+    image: mvst-frontend:dev
+    container_name: mvst-frontend-dev
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-production}
@@ -74,11 +74,11 @@ services:
     networks:
       - edge
     labels:
-      caddy: ${CADDY_FRONTEND_LABEL:-mvst.nugo.dev}
+      caddy: ${CADDY_FRONTEND_LABEL:-mvst-dev.nugo.dev}
       caddy.reverse_proxy: "{{upstreams ${FRONTEND_PORT:-3000}}}"
 
 volumes:
-  postgres_data_prod:
+  postgres_data_dev:
 
 networks:
   edge:

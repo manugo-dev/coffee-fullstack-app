@@ -1,0 +1,177 @@
+name: "Deploy to Server"
+description: "Generic deployment action that syncs code, creates .env from secrets, and deploys with Docker Compose"
+
+inputs:
+  ssh_host:
+    description: "SSH host to deploy to"
+    required: true
+  ssh_user:
+    description: "SSH user"
+    required: true
+  ssh_key:
+    description: "SSH private key"
+    required: true
+  app_name:
+    description: "Application name (defaults to repository name)"
+    required: false
+    default: ""
+  compose_file:
+    description: "Docker Compose file to use"
+    required: true
+  env_vars:
+    description: "Environment variables as KEY=VALUE pairs, separated by newlines"
+    required: false
+    default: ""
+  exclude_patterns:
+    description: "Additional rsync exclude patterns (comma-separated)"
+    required: false
+    default: ""
+
+outputs:
+  deployment_path:
+    description: "Path where the application was deployed"
+    value: ${{ steps.setup.outputs.deployment_path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup deployment variables
+      id: setup
+      shell: bash
+      run: |
+        REPO_NAME="${{ github.event.repository.name }}"
+        APP_NAME="${{ inputs.app_name }}"
+        if [ -z "$APP_NAME" ]; then
+          APP_NAME="$REPO_NAME"
+        fi
+        DEPLOYMENT_PATH="/srv/apps/$APP_NAME"
+        echo "deployment_path=$DEPLOYMENT_PATH" >> $GITHUB_OUTPUT
+        echo "app_name=$APP_NAME" >> $GITHUB_OUTPUT
+        echo "📦 Deploying to: $DEPLOYMENT_PATH"
+        echo "🏷️  App name: $APP_NAME"
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ inputs.ssh_key }}
+
+    - name: Add server to known hosts
+      shell: bash
+      run: |
+        ssh-keyscan -H ${{ inputs.ssh_host }} >> ~/.ssh/known_hosts
+
+    - name: Copy files to server
+      shell: bash
+      env:
+        DEPLOYMENT_PATH: ${{ steps.setup.outputs.deployment_path }}
+      run: |
+        EXCLUDE_PATTERNS=".git,node_modules,.next,dist,coverage,.github,.env*"
+        if [ -n "${{ inputs.exclude_patterns }}" ]; then
+          EXCLUDE_PATTERNS="$EXCLUDE_PATTERNS,${{ inputs.exclude_patterns }}"
+        fi
+
+        EXCLUDE_ARGS=""
+        IFS=',' read -ra PATTERNS <<< "$EXCLUDE_PATTERNS"
+        for pattern in "${PATTERNS[@]}"; do
+          EXCLUDE_ARGS="$EXCLUDE_ARGS --exclude '$pattern'"
+        done
+
+        eval rsync -avz --delete $EXCLUDE_ARGS ./ ${{ inputs.ssh_user }}@${{ inputs.ssh_host }}:$DEPLOYMENT_PATH/
+
+    - name: Create .env file from secrets
+      shell: bash
+      env:
+        DEPLOYMENT_PATH: ${{ steps.setup.outputs.deployment_path }}
+        ENV_VARS: ${{ inputs.env_vars }}
+      run: |
+        if [ -n "$ENV_VARS" ]; then
+          # Create .env file on server
+          ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} << 'ENVEOF'
+            set -e
+            cd $DEPLOYMENT_PATH
+            
+            # Create .env file header
+            cat > .env << 'HEADEREOF'
+        # Generated from GitHub Secrets
+        # Do not edit manually - this file is overwritten on each deploy
+
+        HEADEREOF
+            
+            # Add each environment variable
+            echo "$ENV_VARS" | while IFS= read -r line; do
+              if [ -n "$line" ]; then
+                # Escape special characters
+                escaped_value=$(echo "$line" | sed 's/\$/\\$/g' | sed 's/`/\\`/g' | sed 's/"/\\"/g')
+                echo "$escaped_value" >> .env
+              fi
+            done
+            
+            chmod 600 .env
+            echo "✅ .env file created successfully"
+          ENVEOF
+        else
+          echo "⚠️  No environment variables provided, skipping .env creation"
+        fi
+
+    - name: Deploy with Docker Compose
+      shell: bash
+      env:
+        DEPLOYMENT_PATH: ${{ steps.setup.outputs.deployment_path }}
+        COMPOSE_FILE: ${{ inputs.compose_file }}
+      run: |
+        ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} << 'DEPLOYEOF'
+          set -e
+          cd $DEPLOYMENT_PATH
+          
+          # Create network if it doesn't exist
+          docker network inspect edge > /dev/null 2>&1 || docker network create edge
+          
+          # Pull base images for better cache
+          docker pull node:24-alpine || true
+          docker pull postgres:18-alpine || true
+          
+          # Build with cache
+          DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose -f $COMPOSE_FILE build
+          
+          # Stop old containers
+          docker compose -f $COMPOSE_FILE down || true
+          
+          # Start new containers
+          docker compose -f $COMPOSE_FILE up -d
+          
+          # Wait for services to be ready
+          sleep 10
+          
+          # Run migrations if backend service exists
+          if docker compose -f $COMPOSE_FILE ps --services 2>/dev/null | grep -q backend; then
+            docker compose -f $COMPOSE_FILE exec -T backend npx prisma migrate deploy 2>/dev/null || \
+            docker compose -f $COMPOSE_FILE run --rm backend npx prisma migrate deploy 2>/dev/null || true
+          fi
+          
+          # Cleanup old images
+          docker image prune -f
+          
+          # Show status
+          docker compose -f $COMPOSE_FILE ps
+        DEPLOYEOF
+
+    - name: Verify deployment
+      shell: bash
+      env:
+        DEPLOYMENT_PATH: ${{ steps.setup.outputs.deployment_path }}
+        COMPOSE_FILE: ${{ inputs.compose_file }}
+      run: |
+        sleep 15
+        ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} << 'VERIFYEOF'
+          cd $DEPLOYMENT_PATH
+          echo "=== Container Status ==="
+          docker compose -f $COMPOSE_FILE ps
+          echo ""
+          echo "=== Health Checks ==="
+          if docker compose -f $COMPOSE_FILE ps --services 2>/dev/null | grep -q postgres; then
+            docker compose -f $COMPOSE_FILE exec -T postgres pg_isready -U postgres 2>/dev/null || echo "Postgres not ready"
+          fi
+          echo ""
+          echo "=== Recent Logs ==="
+          docker compose -f $COMPOSE_FILE logs --tail=50
+        VERIFYEOF

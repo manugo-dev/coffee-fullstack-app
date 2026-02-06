@@ -1,9 +1,32 @@
 name: Deploy
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      environment:
+        description: "Target environment (e.g. production, development)"
+        required: true
+        type: string
+      app_name:
+        description: "Application name (used for /srv/apps/<app_name>, defaults to repo name)"
+        required: false
+        type: string
+        default: ""
+      compose_file:
+        description: "Docker Compose file to use (e.g. docker-compose.prod.yml)"
+        required: true
+        type: string
+      env_vars:
+        description: "Environment variables as KEY=VALUE pairs, separated by newlines"
+        required: true
+        type: string
+    secrets:
+      SSH_HOST:
+        required: true
+      SSH_USER:
+        required: true
+      SSH_KEY:
+        required: true
 
 env:
   DOCKER_BUILDKIT: 1
@@ -16,64 +39,42 @@ jobs:
     secrets: inherit
 
   deploy:
-    name: Deploy to Production
+    name: Deploy to ${{ inputs.environment }}
     runs-on: ubuntu-latest
-    environment: production
+    environment: ${{ inputs.environment }}
     needs: [call-ci-workflow]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.9.0
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Prepare environment variables with automatic NODE_ENV
+        id: prepare-env
+        run: |
+          # Automatically set NODE_ENV based on environment
+          NODE_ENV_VALUE="${{ inputs.environment == 'production' && 'production' || 'development' }}"
+
+          # Remove any existing NODE_ENV from provided env_vars to avoid conflicts
+          # Then append automatic NODE_ENV at the end to ensure it has priority
+          CLEANED_ENV_VARS=$(echo "${{ inputs.env_vars }}" | grep -v "^NODE_ENV=" || true)
+
+          # Combine cleaned env_vars with automatic NODE_ENV at the end
+          cat >> $GITHUB_OUTPUT << EOF
+          env_vars<<ENVEOF
+          $CLEANED_ENV_VARS
+          NODE_ENV=$NODE_ENV_VALUE
+          ENVEOF
+          EOF
+
+      - name: Deploy using generic deploy action
+        uses: ./.github/actions/deploy
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-
-      - name: Add server to known hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Copy files to server
-        run: |
-          rsync -avz --delete \
-            --exclude '.git' \
-            --exclude 'node_modules' \
-            --exclude '.next' \
-            --exclude 'dist' \
-            --exclude 'coverage' \
-            ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/apps/mvst-coffee/
-
-      - name: Deploy on server
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            set -e
-            cd /srv/apps/mvst-coffee
-            
-            if [ -f .env ]; then
-              export $(cat .env | grep -v '^#' | xargs)
-            fi
-            
-            docker network inspect edge > /dev/null 2>&1 || docker network create edge
-            
-            docker compose -f docker-compose.prod.yml down || true
-            docker compose -f docker-compose.prod.yml build --no-cache
-            docker compose -f docker-compose.prod.yml up -d
-            
-            sleep 5
-            
-            docker compose -f docker-compose.prod.yml exec -T backend npx prisma migrate deploy || \
-            docker compose -f docker-compose.prod.yml run --rm backend npx prisma migrate deploy || true
-            
-            docker image prune -f
-            docker compose -f docker-compose.prod.yml ps
-          EOF
-
-      - name: Verify deployment
-        run: |
-          sleep 10
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            cd /srv/apps/mvst-coffee
-            docker compose -f docker-compose.prod.yml ps
-            docker compose -f docker-compose.prod.yml logs --tail=50
-          EOF
+          ssh_host: ${{ secrets.SSH_HOST }}
+          ssh_user: ${{ secrets.SSH_USER }}
+          ssh_key: ${{ secrets.SSH_KEY }}
+          app_name: ${{ inputs.app_name }}
+          compose_file: ${{ inputs.compose_file }}
+          env_vars: ${{ steps.prepare-env.outputs.env_vars }}

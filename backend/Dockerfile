@@ -1,31 +1,51 @@
-FROM node:24 AS builder
+FROM node:24-alpine AS deps
 
 WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
 COPY prisma.config.ts ./
 
-RUN npm ci
+# Install dependencies with cache mount
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci
 
+FROM node:24-alpine AS builder
+
+WORKDIR /app
+
+# Copy dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/package*.json ./
+COPY --from=deps /app/prisma ./prisma
+COPY --from=deps /app/prisma.config.ts ./
+
+# Copy source code
 COPY . .
 
+# Set placeholder DATABASE_URL for Prisma generation
 ENV DATABASE_URL=postgresql://placeholder:placeholder@localhost:5432/placeholder
 
+# Generate Prisma Client and build
 RUN npm run prisma:gen
 RUN npm run build
 
-FROM node:24 AS production
+FROM node:24-alpine AS production
 
 WORKDIR /app
 
+# Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
 COPY prisma.config.ts ./
 
-RUN npm ci --only=production && \
+# Install production dependencies with cache mount
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --only=production && \
     npm install -g prisma@latest
 
+# Copy built artifacts from builder
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma/generated ./prisma/generated
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
