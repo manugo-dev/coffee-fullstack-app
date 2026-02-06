@@ -1,4 +1,4 @@
-export type ToastType = "error" | "success" | "warning" | "info";
+export type ToastType = "error" | "info" | "success" | "warning";
 
 export interface Toast {
   id: string;
@@ -7,5 +7,5 @@ export interface Toast {
 }
 
 export interface ToastContextValue {
-  showToast: (message: string, type?: ToastType) => void;
+  showToast: (_message: string, _type?: ToastType) => void;
 }

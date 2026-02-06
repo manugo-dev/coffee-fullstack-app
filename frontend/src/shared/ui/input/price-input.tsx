@@ -1,42 +1,42 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { Input } from "./input";
 import type { InputProps } from "./input.types";
 import { formatPrice, sanitizeInput } from "./input.utils";
 
-type PriceInputProps = Omit<InputProps, "type" | "value" | "onChange"> & {
+type PriceInputProps = Omit<InputProps, "onChange" | "type" | "value"> & {
+  onChange: (_value: number) => void;
   value: number;
-  onChange: (value: number) => void;
 };
 
 export function PriceInput({
-  value,
-  onChange,
   onBlur,
+  onChange,
+  value,
   ...props
 }: PriceInputProps) {
   const [displayValue, setDisplayValue] = useState(() => formatPrice(value));
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const sanitized = sanitizeInput(e.target.value);
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const sanitized = sanitizeInput(event.target.value);
       setDisplayValue(sanitized);
-      const parsed = parseFloat(sanitized);
-      onChange(isNaN(parsed) ? 0 : parsed);
+      const parsed = Number.parseFloat(sanitized);
+      onChange(Number.isNaN(parsed) ? 0 : parsed);
     },
-    [onChange]
+    [onChange],
   );
 
   const handleBlur = useCallback(
-    (e: React.FocusEvent<HTMLInputElement>) => {
+    (event: React.FocusEvent<HTMLInputElement>) => {
       if (value > 0) {
         setDisplayValue(formatPrice(value));
       }
-      onBlur?.(e);
+      onBlur?.(event);
     },
-    [value, onBlur]
+    [value, onBlur],
   );
 
   return (

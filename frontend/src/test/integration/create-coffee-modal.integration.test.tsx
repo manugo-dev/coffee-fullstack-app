@@ -1,7 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { CreateCoffeeForm } from "@/features/create-coffee";
-import { server, errorHandlers } from "../mocks";
+
+import { errorHandlers, server } from "../mocks";
 import { renderWithProviders, screen, userEvent, waitFor } from "../test-utils";
 
 describe("Create Coffee Modal Integration", () => {
@@ -10,7 +11,7 @@ describe("Create Coffee Modal Integration", () => {
   describe("Rendering", () => {
     it("should render all form fields when open", () => {
       renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />,
       );
 
       expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
@@ -19,16 +20,16 @@ describe("Create Coffee Modal Integration", () => {
       expect(screen.getByLabelText(/upload image/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/description/i)).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /discard/i })
+        screen.getByRole("button", { name: /discard/i }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /confirm/i })
+        screen.getByRole("button", { name: /confirm/i }),
       ).toBeInTheDocument();
     });
 
     it("should not render when closed", () => {
       renderWithProviders(
-        <CreateCoffeeForm isOpen={false} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={false} onClose={mockOnClose} />,
       );
 
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -40,9 +41,7 @@ describe("Create Coffee Modal Integration", () => {
       const user = userEvent.setup();
       const onClose = vi.fn();
 
-      renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={onClose} />
-      );
+      renderWithProviders(<CreateCoffeeForm isOpen={true} onClose={onClose} />);
 
       // Fill form
       await user.type(screen.getByLabelText(/name/i), "Test Coffee");
@@ -68,7 +67,7 @@ describe("Create Coffee Modal Integration", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />,
       );
 
       // Fill valid form
@@ -81,7 +80,9 @@ describe("Create Coffee Modal Integration", () => {
 
       // Button should show loading text briefly
       await waitFor(() => {
-        const confirmButton = screen.queryByRole("button", { name: /creating/i });
+        const confirmButton = screen.queryByRole("button", {
+          name: /creating/i,
+        });
         // May not catch due to fast response, but form should work
         expect(confirmButton || screen.queryByRole("dialog")).toBeTruthy();
       });
@@ -92,7 +93,7 @@ describe("Create Coffee Modal Integration", () => {
     it("should show error when name is empty", async () => {
       const user = userEvent.setup();
       renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />,
       );
 
       await user.click(screen.getByRole("button", { name: /confirm/i }));
@@ -105,7 +106,7 @@ describe("Create Coffee Modal Integration", () => {
     it("should show error when price is zero or empty", async () => {
       const user = userEvent.setup();
       renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />,
       );
 
       await user.type(screen.getByLabelText(/name/i), "Test Coffee");
@@ -113,7 +114,7 @@ describe("Create Coffee Modal Integration", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText(/price must be greater than 0/i)
+          screen.getByText(/price must be greater than 0/i),
         ).toBeInTheDocument();
       });
     });
@@ -121,7 +122,7 @@ describe("Create Coffee Modal Integration", () => {
     it("should show error when type is not selected", async () => {
       const user = userEvent.setup();
       renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />,
       );
 
       await user.type(screen.getByLabelText(/name/i), "Test Coffee");
@@ -136,7 +137,7 @@ describe("Create Coffee Modal Integration", () => {
     it("should show error when image URL is invalid", async () => {
       const user = userEvent.setup();
       renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />,
       );
 
       await user.type(screen.getByLabelText(/name/i), "Test Coffee");
@@ -157,7 +158,7 @@ describe("Create Coffee Modal Integration", () => {
     it("should show error when image URL is empty", async () => {
       const user = userEvent.setup();
       renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />,
       );
 
       await user.type(screen.getByLabelText(/name/i), "Test Coffee");
@@ -177,7 +178,7 @@ describe("Create Coffee Modal Integration", () => {
     it("should show error when description is empty", async () => {
       const user = userEvent.setup();
       renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />,
       );
 
       await user.type(screen.getByLabelText(/name/i), "Test Coffee");
@@ -187,7 +188,7 @@ describe("Create Coffee Modal Integration", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText(/description is required/i)
+          screen.getByText(/description is required/i),
         ).toBeInTheDocument();
       });
     });
@@ -199,7 +200,7 @@ describe("Create Coffee Modal Integration", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />,
       );
 
       // Fill valid form
@@ -212,7 +213,7 @@ describe("Create Coffee Modal Integration", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText(/a coffee with the same name already exists/i)
+          screen.getByText(/a coffee with the same name already exists/i),
         ).toBeInTheDocument();
       });
     });
@@ -222,7 +223,7 @@ describe("Create Coffee Modal Integration", () => {
       const user = userEvent.setup();
 
       renderWithProviders(
-        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />
+        <CreateCoffeeForm isOpen={true} onClose={mockOnClose} />,
       );
 
       // Fill valid form

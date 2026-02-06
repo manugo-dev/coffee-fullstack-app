@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import type { Coffee } from "../../model/types";
 
 import styles from "./coffee-card.module.scss";
@@ -8,8 +10,8 @@ interface CoffeeCardProps {
 
 export function CoffeeCard({ coffee }: CoffeeCardProps) {
   const formattedPrice = new Intl.NumberFormat("es-ES", {
-    style: "currency",
     currency: "EUR",
+    style: "currency",
   }).format(coffee.price);
 
   return (
@@ -18,7 +20,13 @@ export function CoffeeCard({ coffee }: CoffeeCardProps) {
         {coffee.type}
       </span>
       <div className={styles.image_wrapper}>
-        <img src={coffee.imageUrl} alt={coffee.name} className={styles.image} />
+        <Image
+          src={coffee.imageUrl}
+          alt={coffee.name}
+          className={styles.image}
+          width={260}
+          height={210}
+        />
       </div>
       <div className={styles.content}>
         <h3 className={styles.name}>{coffee.name}</h3>

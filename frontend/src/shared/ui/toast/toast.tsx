@@ -5,22 +5,23 @@ import { motion } from "motion/react";
 import { Button } from "../button";
 import { CloseIcon, WarningIcon } from "../icons";
 import type { Toast as ToastType } from "./toast.types";
+
 import styles from "./toast.module.scss";
 
 interface ToastProps {
+  onClose: (_id: string) => void;
   toast: ToastType;
-  onClose: (id: string) => void;
 }
 
-export function Toast({ toast, onClose }: ToastProps) {
+export function Toast({ onClose, toast }: ToastProps) {
   return (
     <motion.div
       className={styles.toast}
       data-type={toast.type}
-      initial={{ opacity: 0, y: -20, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+      initial={{ opacity: 0, scale: 0.95, y: -20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95, y: -20 }}
+      transition={{ damping: 30, stiffness: 500, type: "spring" }}
     >
       <span className={styles.icon}>
         <WarningIcon />

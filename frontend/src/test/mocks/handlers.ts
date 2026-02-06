@@ -1,10 +1,11 @@
-import { http, HttpResponse, delay } from "msw";
+import { delay, http, HttpResponse } from "msw";
+
 import {
-  mockCoffeeResponse,
   mockArabicCoffees,
-  mockRobustaCoffees,
+  mockCoffeeResponse,
   mockCoffeeResponsePage2,
   mockEmptyResponse,
+  mockRobustaCoffees,
 } from "./coffee";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -58,38 +59,24 @@ export const handlers = [
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
-      { status: 201 }
+      { status: 201 },
     );
   }),
 ];
 
 // Handlers for error scenarios
 export const errorHandlers = {
-  networkError: http.get(`${API_URL}/coffees`, () => {
+  createError: http.post(`${API_URL}/coffees`, () => {
     return HttpResponse.json(
-      { message: "Network error" },
-      { status: 500 }
+      { message: "Internal server error" },
+      { status: 500 },
     );
   }),
 
-  serverError: http.get(`${API_URL}/coffees`, () => {
+  duplicateCoffee: http.post(`${API_URL}/coffees`, () => {
     return HttpResponse.json(
-      { message: "Internal Server Error" },
-      { status: 500 }
-    );
-  }),
-
-  timeout: http.get(`${API_URL}/coffees`, () => {
-    return HttpResponse.json(
-      { message: "Request timeout" },
-      { status: 408 }
-    );
-  }),
-
-  unauthorized: http.get(`${API_URL}/coffees`, () => {
-    return HttpResponse.json(
-      { message: "Unauthorized" },
-      { status: 401 }
+      { message: "A coffee with the same name already exists" },
+      { status: 409 },
     );
   }),
 
@@ -97,17 +84,22 @@ export const errorHandlers = {
     return HttpResponse.json(mockEmptyResponse);
   }),
 
-  duplicateCoffee: http.post(`${API_URL}/coffees`, () => {
+  networkError: http.get(`${API_URL}/coffees`, () => {
+    return HttpResponse.json({ message: "Network error" }, { status: 500 });
+  }),
+
+  serverError: http.get(`${API_URL}/coffees`, () => {
     return HttpResponse.json(
-      { message: "A coffee with the same name already exists" },
-      { status: 409 }
+      { message: "Internal Server Error" },
+      { status: 500 },
     );
   }),
 
-  createError: http.post(`${API_URL}/coffees`, () => {
-    return HttpResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
+  timeout: http.get(`${API_URL}/coffees`, () => {
+    return HttpResponse.json({ message: "Request timeout" }, { status: 408 });
+  }),
+
+  unauthorized: http.get(`${API_URL}/coffees`, () => {
+    return HttpResponse.json({ message: "Unauthorized" }, { status: 401 });
   }),
 };

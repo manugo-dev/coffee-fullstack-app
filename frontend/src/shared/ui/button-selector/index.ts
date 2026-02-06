@@ -1,5 +1,5 @@
 export { ButtonSelector } from "./button-selector";
 export type {
-  ButtonSelectorProps,
   ButtonSelectorOption,
+  ButtonSelectorProps,
 } from "./button-selector.types";

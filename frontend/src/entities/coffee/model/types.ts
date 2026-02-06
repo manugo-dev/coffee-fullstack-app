@@ -1,36 +1,36 @@
 export type CoffeeType = "arabic" | "robusta";
 
 export interface Coffee {
-  id: string;
-  name: string;
-  description: string;
-  type: CoffeeType;
-  price: number;
-  imageUrl: string;
   createdAt: string;
+  description: string;
+  id: string;
+  imageUrl: string;
+  name: string;
+  price: number;
+  type: CoffeeType;
   updatedAt: string;
 }
 
 export interface CoffeeListResponse {
   data: Coffee[];
   meta: {
-    total: number;
-    page: number;
     limit: number;
+    page: number;
+    total: number;
     totalPages: number;
   };
 }
 
 export interface CoffeeFilters {
-  type?: CoffeeType;
-  page?: number;
   limit?: number;
+  page?: number;
+  type?: CoffeeType;
 }
 
 export interface CreateCoffeeDto {
-  name: string;
   description: string;
-  type: CoffeeType;
-  price: number;
   imageUrl: string;
+  name: string;
+  price: number;
+  type: CoffeeType;
 }

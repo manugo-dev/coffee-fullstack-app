@@ -1,13 +1,13 @@
 export interface ButtonSelectorOption<T extends string> {
-  value: T;
   label: string;
+  value: T;
 }
 
 export interface ButtonSelectorProps<T extends string> {
-  options: ButtonSelectorOption<T>[];
-  value?: T | null;
-  onChange: (value: T) => void;
-  label?: string;
   className?: string;
   error?: string;
+  label?: string;
+  onChange: (_value: T) => void;
+  options: ButtonSelectorOption<T>[];
+  value?: T | null;
 }

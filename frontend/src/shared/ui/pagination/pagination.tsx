@@ -2,12 +2,13 @@
 
 import type { PaginationProps } from "./pagination.types";
 import { getPageNumbers } from "./pagination.utils";
+
 import styles from "./pagination.module.scss";
 
 export function Pagination({
   currentPage,
-  totalPages,
   onPageChange,
+  totalPages,
 }: PaginationProps) {
   if (totalPages <= 1) return null;
 
@@ -39,7 +40,7 @@ export function Pagination({
           >
             {page}
           </button>
-        )
+        ),
       )}
 
       <button

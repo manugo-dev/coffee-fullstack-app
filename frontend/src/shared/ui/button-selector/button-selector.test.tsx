@@ -1,12 +1,13 @@
-import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
+
 import { ButtonSelector } from "./button-selector";
 
 const options = [
-  { value: "option1", label: "Option 1" },
-  { value: "option2", label: "Option 2" },
-  { value: "option3", label: "Option 3" },
+  { label: "Option 1", value: "option1" },
+  { label: "Option 2", value: "option2" },
+  { label: "Option 3", value: "option3" },
 ] as const;
 
 type OptionValue = (typeof options)[number]["value"];
@@ -19,12 +20,18 @@ describe("ButtonSelector", () => {
           options={[...options]}
           value={undefined}
           onChange={vi.fn()}
-        />
+        />,
       );
 
-      expect(screen.getByRole("button", { name: "Option 1" })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Option 2" })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Option 3" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Option 1" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Option 2" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Option 3" }),
+      ).toBeInTheDocument();
     });
 
     it("should render label when provided", () => {
@@ -34,7 +41,7 @@ describe("ButtonSelector", () => {
           value={undefined}
           onChange={vi.fn()}
           label="Select an option"
-        />
+        />,
       );
 
       expect(screen.getByText("Select an option")).toBeInTheDocument();
@@ -46,7 +53,7 @@ describe("ButtonSelector", () => {
           options={[...options]}
           value={undefined}
           onChange={vi.fn()}
-        />
+        />,
       );
 
       expect(screen.getByRole("group")).toBeInTheDocument();
@@ -60,7 +67,7 @@ describe("ButtonSelector", () => {
           options={[...options]}
           value="option2"
           onChange={vi.fn()}
-        />
+        />,
       );
 
       const option2 = screen.getByRole("button", { name: "Option 2" });
@@ -74,7 +81,7 @@ describe("ButtonSelector", () => {
           options={[...options]}
           value="option2"
           onChange={vi.fn()}
-        />
+        />,
       );
 
       const option1 = screen.getByRole("button", { name: "Option 1" });
@@ -91,7 +98,7 @@ describe("ButtonSelector", () => {
           options={[...options]}
           value={undefined}
           onChange={onChange}
-        />
+        />,
       );
 
       await user.click(screen.getByRole("button", { name: "Option 2" }));
@@ -108,7 +115,7 @@ describe("ButtonSelector", () => {
           value={undefined}
           onChange={vi.fn()}
           error="Please select an option"
-        />
+        />,
       );
 
       expect(screen.getByText("Please select an option")).toBeInTheDocument();
@@ -121,27 +128,26 @@ describe("ButtonSelector", () => {
           value={undefined}
           onChange={vi.fn()}
           error="Error"
-        />
+        />,
       );
 
       const buttons = screen.getAllByRole("button");
-      buttons.forEach((button) => {
+      for (const button of buttons) {
         expect(button).toHaveAttribute("data-error", "true");
-      });
+      }
     });
   });
 
   describe("custom props", () => {
     it("should apply custom className", () => {
-      const { container } = render(
+      render(
         <ButtonSelector<OptionValue>
           options={[...options]}
           value={undefined}
           onChange={vi.fn()}
           className="custom-class"
-        />
+        />,
       );
-
       // The wrapper div contains the group
       const wrapperDiv = screen.getByRole("group").parentElement;
       expect(wrapperDiv).toHaveClass("custom-class");

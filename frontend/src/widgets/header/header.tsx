@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { useCreateCoffeeModal } from "@/features/create-coffee";
 import { Button } from "@/shared/ui/button";
@@ -26,14 +27,14 @@ export function Header() {
   return (
     <header className={styles.header} data-scrolled={isScrolled || undefined}>
       <div className={styles.container}>
-        <a href="/" className={styles.logo}>
+        <Link href="/" className={styles.logo}>
           <Image
             src="/images/logo.svg"
             alt="MVST. Coffee"
             width={165}
             height={25}
           />
-        </a>
+        </Link>
 
         <nav className={styles.nav}>
           <Button size="sm" onClick={openModal}>

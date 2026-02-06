@@ -1,15 +1,21 @@
 import { forwardRef, useId } from "react";
 
+import { cn } from "@/shared/lib/classnames";
+
 import type { InputProps } from "./input.types";
+
 import styles from "./input.module.scss";
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, suffix, className, id: propId, ...props }, ref) => {
+  (
+    { className, error, id: propertyId, label, suffix, ...props },
+    reference,
+  ) => {
     const generatedId = useId();
-    const id = propId ?? generatedId;
+    const id = propertyId ?? generatedId;
 
     return (
-      <div className={`${styles.field}${className ? ` ${className}` : ""}`}>
+      <div className={cn(styles.field, className)}>
         {label && (
           <label htmlFor={id} className={styles.label}>
             {label}
@@ -17,7 +23,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className={styles.wrapper}>
           <input
-            ref={ref}
+            ref={reference}
             id={id}
             className={styles.input}
             data-error={!!error}
@@ -29,7 +35,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {error && <span className={styles.error}>{error}</span>}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";

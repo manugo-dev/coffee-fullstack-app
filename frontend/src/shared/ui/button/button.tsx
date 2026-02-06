@@ -1,13 +1,15 @@
-import type { ButtonProps } from "./button.types";
-import styles from "./button.module.scss";
 import { cn } from "@/shared/lib/classnames";
 
+import type { ButtonProps } from "./button.types";
+
+import styles from "./button.module.scss";
+
 export function Button({
-  variant = "primary",
-  size = "md",
-  fullWidth = false,
-  className = "",
   children,
+  className = "",
+  fullWidth = false,
+  size = "md",
+  variant = "primary",
   ...props
 }: ButtonProps) {
   return (

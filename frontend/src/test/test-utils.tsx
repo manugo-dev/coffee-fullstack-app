@@ -1,18 +1,18 @@
-import { ReactNode } from "react";
-import { render, RenderOptions } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, RenderOptions } from "@testing-library/react";
+import { ReactNode } from "react";
 
-import { ToastProvider } from "@/shared/ui/toast";
 import { CreateCoffeeModalProvider } from "@/features/create-coffee";
+import { ToastProvider } from "@/shared/ui/toast";
 
 function createTestQueryClient() {
   return new QueryClient({
     defaultOptions: {
-      queries: {
-        retry: false,
-        gcTime: 0,
-      },
       mutations: {
+        retry: false,
+      },
+      queries: {
+        gcTime: 0,
         retry: false,
       },
     },
@@ -22,6 +22,10 @@ function createTestQueryClient() {
 interface WrapperProps {
   children: ReactNode;
 }
+
+export * from "@testing-library/react";
+
+export { default as userEvent } from "@testing-library/user-event";
 
 export function createWrapper() {
   const queryClient = createTestQueryClient();
@@ -36,13 +40,9 @@ export function createWrapper() {
     );
   };
 }
-
 export function renderWithProviders(
   ui: React.ReactElement,
-  options?: Omit<RenderOptions, "wrapper">
+  options?: Omit<RenderOptions, "wrapper">,
 ) {
   return render(ui, { wrapper: createWrapper(), ...options });
 }
-
-export * from "@testing-library/react";
-export { default as userEvent } from "@testing-library/user-event";

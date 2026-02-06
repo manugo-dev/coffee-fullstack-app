@@ -1,8 +1,8 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import { CoffeeList, coffeeKeys, getCoffees } from "@/entities/coffee";
-import { HomeHero } from "@/widgets/home-hero";
+import { coffeeKeys, CoffeeList, getCoffees } from "@/entities/coffee";
 import { getQueryClient } from "@/shared/api";
+import { HomeHero } from "@/widgets/home-hero";
 
 const DEFAULT_FILTERS = {
   limit: 6,
@@ -12,8 +12,8 @@ export async function HomePage() {
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: coffeeKeys.list(DEFAULT_FILTERS),
     queryFn: () => getCoffees(DEFAULT_FILTERS),
+    queryKey: coffeeKeys.list(DEFAULT_FILTERS),
   });
 
   return (

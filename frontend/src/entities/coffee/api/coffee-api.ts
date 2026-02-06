@@ -10,18 +10,18 @@ import type {
 // Query keys factory
 export const coffeeKeys = {
   all: ["coffees"] as const,
-  lists: () => [...coffeeKeys.all, "list"] as const,
   list: (filters: CoffeeFilters) => [...coffeeKeys.lists(), filters] as const,
+  lists: () => [...coffeeKeys.all, "list"] as const,
 };
 
 export async function getCoffees(
-  filters: CoffeeFilters = {}
+  filters: CoffeeFilters = {},
 ): Promise<CoffeeListResponse> {
   const { data } = await api.get<CoffeeListResponse>("/coffees", {
     params: {
-      type: filters.type,
-      page: filters.page,
       limit: filters.limit,
+      page: filters.page,
+      type: filters.type,
     },
   });
 

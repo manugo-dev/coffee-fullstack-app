@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
-import { Header } from "@/widgets/header";
 import { Footer } from "@/widgets/footer";
+import { Header } from "@/widgets/header";
 import { HomeHero } from "@/widgets/home-hero";
 
 import { renderWithProviders, screen, userEvent, waitFor } from "../test-utils";
@@ -24,7 +24,7 @@ describe("Home Page Integration", () => {
       renderWithProviders(<Header />);
 
       expect(
-        screen.getByRole("button", { name: /create coffee/i })
+        screen.getByRole("button", { name: /create coffee/i }),
       ).toBeInTheDocument();
     });
 
@@ -40,7 +40,7 @@ describe("Home Page Integration", () => {
       await waitFor(() => {
         expect(screen.getByRole("dialog")).toBeInTheDocument();
         expect(
-          screen.getByRole("heading", { name: /create new/i })
+          screen.getByRole("heading", { name: /create new/i }),
         ).toBeInTheDocument();
       });
     });
@@ -65,7 +65,7 @@ describe("Home Page Integration", () => {
       renderWithProviders(<HomeHero />);
 
       expect(
-        screen.getByRole("heading", { name: /roasted coffee/i })
+        screen.getByRole("heading", { name: /roasted coffee/i }),
       ).toBeInTheDocument();
     });
 
@@ -73,7 +73,7 @@ describe("Home Page Integration", () => {
       renderWithProviders(<HomeHero />);
 
       expect(
-        screen.getByText(/choose a coffee from below/i)
+        screen.getByText(/choose a coffee from below/i),
       ).toBeInTheDocument();
     });
 
@@ -81,7 +81,7 @@ describe("Home Page Integration", () => {
       renderWithProviders(<HomeHero />);
 
       expect(
-        screen.getByRole("button", { name: /create your own coffee/i })
+        screen.getByRole("button", { name: /create your own coffee/i }),
       ).toBeInTheDocument();
     });
 
@@ -97,7 +97,7 @@ describe("Home Page Integration", () => {
       await waitFor(() => {
         expect(screen.getByRole("dialog")).toBeInTheDocument();
         expect(
-          screen.getByRole("heading", { name: /create new/i })
+          screen.getByRole("heading", { name: /create new/i }),
         ).toBeInTheDocument();
       });
     });

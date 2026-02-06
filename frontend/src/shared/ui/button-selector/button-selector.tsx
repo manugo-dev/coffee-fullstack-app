@@ -1,19 +1,21 @@
 "use client";
 
-import type { ButtonSelectorProps } from "./button-selector.types";
-import styles from "./button-selector.module.scss";
 import { cn } from "@/shared/lib/classnames";
 
+import type { ButtonSelectorProps } from "./button-selector.types";
+
+import styles from "./button-selector.module.scss";
+
 export function ButtonSelector<T extends string>({
-  options,
-  value,
-  onChange,
-  label,
   className,
   error,
+  label,
+  onChange,
+  options,
+  value,
 }: ButtonSelectorProps<T>) {
   return (
-    <div className={`${styles.field}${className ? ` ${className}` : ""}`}>
+    <div className={cn(styles.field, className)}>
       {label && <span className={styles.label}>{label}</span>}
       <div className={styles.group} role="group">
         {options.map((option) => (

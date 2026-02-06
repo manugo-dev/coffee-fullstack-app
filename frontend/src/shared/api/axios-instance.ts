@@ -18,5 +18,5 @@ api.interceptors.response.use(
       "An unexpected error occurred";
 
     return Promise.reject(new Error(message));
-  }
+  },
 );

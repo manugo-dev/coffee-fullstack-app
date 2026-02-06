@@ -1,7 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { CoffeeList } from "@/entities/coffee";
-import { server, errorHandlers } from "../mocks";
+
+import { errorHandlers, server } from "../mocks";
 import { renderWithProviders, screen, userEvent, waitFor } from "../test-utils";
 
 describe("Coffee List Integration", () => {
@@ -21,12 +22,14 @@ describe("Coffee List Integration", () => {
       renderWithProviders(<CoffeeList initialFilters={{ limit: 6 }} />);
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: /all/i })).toBeInTheDocument();
         expect(
-          screen.getByRole("button", { name: /robusta/i })
+          screen.getByRole("button", { name: /all/i }),
         ).toBeInTheDocument();
         expect(
-          screen.getByRole("button", { name: /arabic/i })
+          screen.getByRole("button", { name: /robusta/i }),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: /arabic/i }),
         ).toBeInTheDocument();
       });
     });

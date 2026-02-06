@@ -1,8 +1,8 @@
 import { HomePage } from "@/views/home";
 
 export const metadata = {
-  title: "MVST. Exclusive Coffee",
   description: "MVST. Exclusive Coffee List",
+  title: "MVST. Exclusive Coffee",
 };
 
 export default async function Page() {

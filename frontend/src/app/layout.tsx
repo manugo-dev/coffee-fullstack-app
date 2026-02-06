@@ -1,14 +1,13 @@
-import "@/shared/styles/globals.scss";
-
 import { QueryProvider } from "@/application/providers";
 import { CreateCoffeeModalProvider } from "@/features/create-coffee";
-import { Header } from "@/widgets/header";
-import { Footer } from "@/widgets/footer";
+import "@/shared/styles/globals.scss";
 import { ToastProvider } from "@/shared/ui/toast";
+import { Footer } from "@/widgets/footer";
+import { Header } from "@/widgets/header";
 
 export const metadata = {
-  title: "Coffee Shop",
   description: "MVST. EXCLUSIVE Coffee",
+  title: "Coffee Shop",
 };
 
 export default function RootLayout({

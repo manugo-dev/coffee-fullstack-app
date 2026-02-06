@@ -2,23 +2,24 @@
 
 import { useState } from "react";
 
-import { Tabs, type TabOption } from "@/shared/ui/tabs";
+import { cn } from "@/shared/lib/classnames";
+import { WarningIcon } from "@/shared/ui/icons";
+import { Pagination } from "@/shared/ui/pagination";
 import { Spinner } from "@/shared/ui/spinner";
+import { type TabOption, Tabs } from "@/shared/ui/tabs";
 
 import { useCoffees } from "../../api/use-coffees";
 import type { CoffeeFilters, CoffeeType } from "../../model/types";
 import { CoffeeCard } from "../coffee-card/coffee-card";
+
 import styles from "./coffee-list.module.scss";
-import { Pagination } from "@/shared/ui/pagination";
-import { cn } from "@/shared/lib/classnames";
-import { WarningIcon } from "@/shared/ui/icons";
 
 type FilterType = "all" | CoffeeType;
 
 const FILTER_OPTIONS: TabOption<FilterType>[] = [
-  { value: "all", label: "All" },
-  { value: "robusta", label: "Robusta" },
-  { value: "arabic", label: "Arabic" },
+  { label: "All", value: "all" },
+  { label: "Robusta", value: "robusta" },
+  { label: "Arabic", value: "arabic" },
 ];
 
 interface CoffeeListProps {
@@ -28,28 +29,28 @@ interface CoffeeListProps {
 export function CoffeeList({ initialFilters = {} }: CoffeeListProps) {
   const [filters, setFilters] = useState<CoffeeFilters>(initialFilters);
   const [activeTab, setActiveTab] = useState<FilterType>(
-    initialFilters.type || "all"
+    initialFilters.type || "all",
   );
 
   const {
     data: coffeesResponse,
     error,
     isError,
-    isLoading,
     isFetching,
+    isLoading,
   } = useCoffees(filters);
 
   const handleTabChange = (value: FilterType) => {
     setActiveTab(value);
-    setFilters((prev) => ({
-      ...prev,
-      type: value === "all" ? undefined : value,
+    setFilters((previous) => ({
+      ...previous,
       page: 1,
+      type: value === "all" ? undefined : value,
     }));
   };
 
   const handlePageChange = (page: number) => {
-    setFilters((prev) => ({ ...prev, page }));
+    setFilters((previous) => ({ ...previous, page }));
   };
 
   if (isError) {

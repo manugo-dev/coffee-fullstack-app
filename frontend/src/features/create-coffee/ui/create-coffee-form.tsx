@@ -1,17 +1,18 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
 
-import { useCreateCoffee, type CoffeeType } from "@/entities/coffee";
-import { Modal } from "@/shared/ui/modal";
-import { Input, PriceInput } from "@/shared/ui/input";
-import { ButtonSelector } from "@/shared/ui/button-selector";
+import { type CoffeeType, useCreateCoffee } from "@/entities/coffee";
 import { Button } from "@/shared/ui/button";
+import { ButtonSelector } from "@/shared/ui/button-selector";
+import { Input, PriceInput } from "@/shared/ui/input";
+import { Modal } from "@/shared/ui/modal";
 import { useToast } from "@/shared/ui/toast";
 
-import { createCoffeeSchema, type CreateCoffeeFormData } from "../model/schema";
 import { COFFEE_TYPE_OPTIONS, DEFAULT_FORM_VALUES } from "../model/constants";
+import { type CreateCoffeeFormData, createCoffeeSchema } from "../model/schema";
+
 import styles from "./create-coffee-form.module.scss";
 
 interface CreateCoffeeFormProps {
@@ -24,14 +25,14 @@ export function CreateCoffeeForm({ isOpen, onClose }: CreateCoffeeFormProps) {
   const { showToast } = useToast();
 
   const {
-    register,
     control,
-    handleSubmit,
-    reset,
     formState: { errors },
+    handleSubmit,
+    register,
+    reset,
   } = useForm<CreateCoffeeFormData>({
-    resolver: yupResolver(createCoffeeSchema),
     defaultValues: DEFAULT_FORM_VALUES,
+    resolver: yupResolver(createCoffeeSchema),
   });
 
   const handleDiscard = () => {

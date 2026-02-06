@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom/vitest";
-import { vi, beforeAll, afterEach, afterAll } from "vitest";
-import React from "react";
+import { createElement } from "react";
+import { afterAll, afterEach, beforeAll, vi } from "vitest";
 
 import { server } from "./mocks/server";
 
@@ -15,40 +15,41 @@ afterAll(() => server.close());
 
 // Mock Next.js router
 vi.mock("next/navigation", () => ({
+  usePathname: () => "/",
   useRouter: () => ({
+    back: vi.fn(),
+    prefetch: vi.fn(),
     push: vi.fn(),
     replace: vi.fn(),
-    prefetch: vi.fn(),
-    back: vi.fn(),
   }),
-  usePathname: () => "/",
   useSearchParams: () => new URLSearchParams(),
 }));
 
 // Mock Next.js Image
 vi.mock("next/image", () => ({
-  default: (props: { src: string; alt: string; [key: string]: unknown }) =>
-    React.createElement("img", { ...props, src: props.src, alt: props.alt }),
+  default: (props: { alt: string; src: string; [key: string]: unknown }) =>
+    createElement("img", { ...props, alt: props.alt, src: props.src }),
 }));
 
 // Mock window.matchMedia
-Object.defineProperty(window, "matchMedia", {
-  writable: true,
+Object.defineProperty(globalThis, "matchMedia", {
   value: vi.fn().mockImplementation((query) => ({
+    addEventListener: vi.fn(),
+    addListener: vi.fn(),
+    dispatchEvent: vi.fn(),
     matches: false,
     media: query,
     onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
+    removeListener: vi.fn(),
   })),
+  writable: true,
 });
 
 // Mock crypto.randomUUID
 Object.defineProperty(globalThis, "crypto", {
   value: {
+    // eslint-disable-next-line sonarjs/pseudo-random
     randomUUID: () => "test-uuid-" + Math.random().toString(36).slice(2),
   },
 });

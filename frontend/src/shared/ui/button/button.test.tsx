@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
+
 import { Button } from "./button";
 
 describe("Button", () => {
@@ -24,7 +25,7 @@ describe("Button", () => {
 
       expect(screen.getByRole("button")).toHaveAttribute(
         "data-variant",
-        "primary"
+        "primary",
       );
     });
 
@@ -33,14 +34,17 @@ describe("Button", () => {
 
       expect(screen.getByRole("button")).toHaveAttribute(
         "data-variant",
-        "secondary"
+        "secondary",
       );
     });
 
     it("should apply ghost variant", () => {
       render(<Button variant="ghost">Click me</Button>);
 
-      expect(screen.getByRole("button")).toHaveAttribute("data-variant", "ghost");
+      expect(screen.getByRole("button")).toHaveAttribute(
+        "data-variant",
+        "ghost",
+      );
     });
   });
 
@@ -70,7 +74,7 @@ describe("Button", () => {
 
       expect(screen.getByRole("button")).toHaveAttribute(
         "data-full-width",
-        "false"
+        "false",
       );
     });
 
@@ -79,7 +83,7 @@ describe("Button", () => {
 
       expect(screen.getByRole("button")).toHaveAttribute(
         "data-full-width",
-        "true"
+        "true",
       );
     });
   });
@@ -103,7 +107,7 @@ describe("Button", () => {
       render(
         <Button onClick={onClick} disabled>
           Click me
-        </Button>
+        </Button>,
       );
 
       await user.click(screen.getByRole("button"));
@@ -124,7 +128,7 @@ describe("Button", () => {
 
       expect(screen.getByRole("button")).toHaveAttribute(
         "aria-label",
-        "Custom label"
+        "Custom label",
       );
     });
   });

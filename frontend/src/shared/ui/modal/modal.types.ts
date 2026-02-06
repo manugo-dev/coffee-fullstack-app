@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
 
 export interface ModalProps {
+  children: ReactNode;
+  className?: string;
+  closeClassName?: string;
+  contentClassName?: string;
   isOpen: boolean;
   onClose: () => void;
-  children: ReactNode;
-  title?: string;
-  className?: string;
   overlayClassName?: string;
-  contentClassName?: string;
-  closeClassName?: string;
+  title?: string;
   titleClassName?: string;
 }

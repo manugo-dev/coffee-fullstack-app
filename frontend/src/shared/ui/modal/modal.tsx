@@ -1,31 +1,33 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useCallback, useEffect } from "react";
 
+import { cn } from "@/shared/lib/classnames";
 import { Button } from "@/shared/ui/button";
 import { CloseIcon } from "@/shared/ui/icons";
+
 import type { ModalProps } from "./modal.types";
+
 import styles from "./modal.module.scss";
-import { cn } from "@/shared/lib/classnames";
 
 export function Modal({
+  children,
+  className = "",
+  closeClassName = "",
+  contentClassName = "",
   isOpen,
   onClose,
-  children,
-  title,
-  className = "",
   overlayClassName = "",
-  contentClassName = "",
-  closeClassName = "",
+  title,
   titleClassName = "",
 }: ModalProps) {
   const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+    (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
         onClose();
       }
     },
-    [onClose]
+    [onClose],
   );
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export function Modal({
       <div
         className={cn(styles.modal, className)}
         data-open={isOpen}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? "modal-title" : undefined}

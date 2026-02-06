@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
+
 import { Input } from "./input";
 
 describe("Input", () => {
@@ -48,7 +49,10 @@ describe("Input", () => {
     it("should not show error when not provided", () => {
       render(<Input />);
 
-      expect(screen.getByRole("textbox")).toHaveAttribute("data-error", "false");
+      expect(screen.getByRole("textbox")).toHaveAttribute(
+        "data-error",
+        "false",
+      );
     });
   });
 
@@ -64,7 +68,7 @@ describe("Input", () => {
 
       expect(screen.getByRole("textbox")).toHaveAttribute(
         "data-has-suffix",
-        "true"
+        "true",
       );
     });
 
@@ -73,7 +77,7 @@ describe("Input", () => {
 
       expect(screen.getByRole("textbox")).toHaveAttribute(
         "data-has-suffix",
-        "false"
+        "false",
       );
     });
   });
@@ -100,5 +104,4 @@ describe("Input", () => {
       expect(onChange).toHaveBeenCalled();
     });
   });
-
 });

@@ -1,8 +1,8 @@
 "use client";
 
 import { useCreateCoffeeModal } from "@/features/create-coffee";
-import { Button } from "@/shared/ui/button";
 import { cn } from "@/shared/lib/classnames";
+import { Button } from "@/shared/ui/button";
 
 import styles from "./home-hero.module.scss";
 

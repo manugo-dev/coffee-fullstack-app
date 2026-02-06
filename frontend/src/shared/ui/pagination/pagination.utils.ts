@@ -2,7 +2,7 @@ import type { PageItem } from "./pagination.types";
 
 export function getPageNumbers(current: number, total: number): PageItem[] {
   if (total <= 5) {
-    return Array.from({ length: total }, (_, i) => i + 1);
+    return Array.from({ length: total }, (_, index) => index + 1);
   }
 
   if (current <= 3) {

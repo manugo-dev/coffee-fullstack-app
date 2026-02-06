@@ -1,13 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useCallback, useContext, useState } from "react";
 
 import { CreateCoffeeForm } from "./create-coffee-form";
 
 interface CreateCoffeeModalContextValue {
+  closeModal: () => void;
   isOpen: boolean;
   openModal: () => void;
-  closeModal: () => void;
 }
 
 const CreateCoffeeModalContext =
@@ -17,7 +17,7 @@ export function useCreateCoffeeModal() {
   const context = useContext(CreateCoffeeModalContext);
   if (!context) {
     throw new Error(
-      "useCreateCoffeeModal must be used within CreateCoffeeModalProvider"
+      "useCreateCoffeeModal must be used within CreateCoffeeModalProvider",
     );
   }
   return context;
@@ -37,7 +37,7 @@ export function CreateCoffeeModalProvider({
 
   return (
     <CreateCoffeeModalContext.Provider
-      value={{ isOpen, openModal, closeModal }}
+      value={{ closeModal, isOpen, openModal }}
     >
       {children}
       <CreateCoffeeForm isOpen={isOpen} onClose={closeModal} />

@@ -5,7 +5,7 @@ export const formatPrice = (value: number): string => {
 
 export const sanitizeInput = (value: string): string => {
   // Remove non-numeric characters except decimal point
-  let sanitized = value.replace(/[^\d.]/g, "");
+  let sanitized = value.replaceAll(/[^\d.]/g, "");
   // Ensure only one decimal point
   const parts = sanitized.split(".");
   if (parts.length > 2) {

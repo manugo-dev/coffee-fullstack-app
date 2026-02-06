@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { Modal } from "./modal";
 
 describe("Modal", () => {
@@ -20,7 +21,7 @@ describe("Modal", () => {
       render(
         <Modal isOpen={true} onClose={mockOnClose}>
           Modal content
-        </Modal>
+        </Modal>,
       );
 
       expect(screen.getByRole("dialog")).toBeInTheDocument();
@@ -31,7 +32,7 @@ describe("Modal", () => {
       render(
         <Modal isOpen={false} onClose={mockOnClose}>
           Modal content
-        </Modal>
+        </Modal>,
       );
 
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -41,7 +42,7 @@ describe("Modal", () => {
       render(
         <Modal isOpen={true} onClose={mockOnClose} title="My Modal">
           Modal content
-        </Modal>
+        </Modal>,
       );
 
       expect(screen.getByText("My Modal")).toBeInTheDocument();
@@ -51,7 +52,7 @@ describe("Modal", () => {
       render(
         <Modal isOpen={true} onClose={mockOnClose} title="My Modal">
           Modal content
-        </Modal>
+        </Modal>,
       );
 
       const dialog = screen.getByRole("dialog");
@@ -66,7 +67,7 @@ describe("Modal", () => {
       render(
         <Modal isOpen={true} onClose={mockOnClose}>
           Modal content
-        </Modal>
+        </Modal>,
       );
 
       await user.click(screen.getByLabelText("Close modal"));
@@ -79,7 +80,7 @@ describe("Modal", () => {
       render(
         <Modal isOpen={true} onClose={mockOnClose}>
           Modal content
-        </Modal>
+        </Modal>,
       );
 
       const overlay = screen.getByRole("presentation");
@@ -93,7 +94,7 @@ describe("Modal", () => {
       render(
         <Modal isOpen={true} onClose={mockOnClose}>
           <button>Inside button</button>
-        </Modal>
+        </Modal>,
       );
 
       await user.click(screen.getByText("Inside button"));
@@ -105,7 +106,7 @@ describe("Modal", () => {
       render(
         <Modal isOpen={true} onClose={mockOnClose}>
           Modal content
-        </Modal>
+        </Modal>,
       );
 
       fireEvent.keyDown(document, { key: "Escape" });
@@ -119,7 +120,7 @@ describe("Modal", () => {
       render(
         <Modal isOpen={true} onClose={mockOnClose}>
           Modal content
-        </Modal>
+        </Modal>,
       );
 
       expect(document.body.style.overflow).toBe("hidden");
@@ -129,7 +130,7 @@ describe("Modal", () => {
       const { rerender } = render(
         <Modal isOpen={true} onClose={mockOnClose}>
           Modal content
-        </Modal>
+        </Modal>,
       );
 
       expect(document.body.style.overflow).toBe("hidden");
@@ -137,7 +138,7 @@ describe("Modal", () => {
       rerender(
         <Modal isOpen={false} onClose={mockOnClose}>
           Modal content
-        </Modal>
+        </Modal>,
       );
 
       expect(document.body.style.overflow).toBe("");

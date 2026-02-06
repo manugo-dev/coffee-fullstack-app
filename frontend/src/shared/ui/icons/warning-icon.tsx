@@ -1,6 +1,6 @@
 import type { IconProps } from "./icon.types";
 
-export function WarningIcon({ size = 24, className }: IconProps) {
+export function WarningIcon({ className, size = 24 }: IconProps) {
   return (
     <svg
       width={size}
