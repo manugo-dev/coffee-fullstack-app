@@ -13,7 +13,7 @@
     "lint:stylelint": "stylelint '**/*.{css,scss}'",
     "start": "next start",
     "start:dev": "next dev",
-    "test:coverage": "vitest run --coverage",
+    "test:cov": "vitest run --coverage",
     "test:run": "vitest run",
     "test": "vitest",
     "typecheck": "tsc --noEmit --project tsconfig.json"

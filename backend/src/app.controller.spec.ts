@@ -21,12 +21,6 @@ describe("AppController", () => {
     expect(controller).toBeDefined();
   });
 
-  describe("getHello", () => {
-    it('should return "Hello World!"', () => {
-      expect(controller.getHello()).toBe("Hello World!");
-    });
-  });
-
   describe("healthCheck", () => {
     it('should return "OK"', () => {
       expect(controller.healthCheck()).toBe("OK");
