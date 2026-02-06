@@ -1,9 +1,4 @@
 {
-    "*.ts": [
-        "eslint",
-        "prettier"
-    ],
-    "*.{js,jsx,json,css,scss,md}": [
-        "prettier"
-    ]
+  "*.ts": ["eslint", "prettier"],
+  "*.{js,jsx,json,css,scss,md}": ["prettier"]
 }
