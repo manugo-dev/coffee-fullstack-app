@@ -35,7 +35,7 @@ services:
       - .env
     environment:
       NODE_ENV: ${NODE_ENV:-development}
-      PORT: ${BACKEND_PORT:-5000}
+      BACKEND_PORT: ${BACKEND_PORT:-5000}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB:-mvst_coffee_db_dev}
@@ -67,7 +67,7 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-production}
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_API_URL: ${BACKEND_URL}
       PORT: ${FRONTEND_PORT:-3000}
     depends_on:
       - backend

@@ -13,13 +13,8 @@ jobs:
       environment: production
       compose_file: docker-compose.prod.yml
       env_vars: |
-        POSTGRES_USER=${{ secrets.POSTGRES_USER || 'postgres' }}
-        POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-        POSTGRES_DB=${{ secrets.POSTGRES_DB || 'app_db' }}
-        PORT=${{ vars.BACKEND_PORT || '5000' }}
         FRONTEND_URL=${{ vars.FRONTEND_URL || 'https://appname.nugo.dev' }}
         BACKEND_URL=${{ vars.BACKEND_URL || 'https://appname-api.nugo.dev' }}
-        NEXT_PUBLIC_API_URL=${{ vars.BACKEND_URL || 'https://appname-api.nugo.dev' }}
         CADDY_FRONTEND_LABEL=${{ vars.CADDY_FRONTEND_LABEL || 'appname.nugo.dev' }}
         CADDY_BACKEND_LABEL=${{ vars.CADDY_BACKEND_LABEL || 'appname-api.nugo.dev' }}
         FRONTEND_PORT=${{ vars.FRONTEND_PORT || '3000' }}
@@ -28,3 +23,6 @@ jobs:
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_KEY: ${{ secrets.SSH_KEY }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}

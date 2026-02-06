@@ -19,7 +19,9 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(process.env.PORT ? Number(process.env.PORT) : 5000);
+  await app.listen(
+    process.env.BACKEND_PORT ? Number(process.env.BACKEND_PORT) : 5000,
+  );
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
