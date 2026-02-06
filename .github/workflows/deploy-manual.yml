@@ -18,6 +18,7 @@ env:
 
 jobs:
   call-ci-workflow:
+    name: CI
     uses: ./.github/workflows/ci.yml
     secrets: inherit
 
