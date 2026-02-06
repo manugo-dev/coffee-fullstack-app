@@ -87,30 +87,29 @@ runs:
         if [ -n "$ENV_VARS" ]; then
           # Create .env file on server
           ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} << 'ENVEOF'
-            set -e
-            cd $DEPLOYMENT_PATH
-            
-            # Create .env file header
-            cat > .env << 'HEADEREOF'
-        # Generated from GitHub Secrets
-        # Do not edit manually - this file is overwritten on each deploy
+          set -e
+          cd "$DEPLOYMENT_PATH"
 
-        HEADEREOF
-            
-            # Add each environment variable
-            echo "$ENV_VARS" | while IFS= read -r line; do
-              if [ -n "$line" ]; then
-                # Escape special characters
-                escaped_value=$(echo "$line" | sed 's/\$/\\$/g' | sed 's/`/\\`/g' | sed 's/"/\\"/g')
-                echo "$escaped_value" >> .env
-              fi
-            done
-            
-            chmod 600 .env
-            echo "✅ .env file created successfully"
+          # Create .env file header
+          cat > .env << 'HEADEREOF'
+          # Generated from GitHub Secrets
+          # Do not edit manually - this file is overwritten on each deploy
+          HEADEREOF
+
+          # Add each environment variable
+          echo "$ENV_VARS" | while IFS= read -r line; do
+            if [ -n "$line" ]; then
+              # Escape special characters
+              escaped_value=$(echo "$line" | sed 's/\$/\\$/g' | sed 's/`/\\`/g' | sed 's/"/\\"/g')
+              echo "$escaped_value" >> .env
+            fi
+          done
+
+          chmod 600 .env
+          echo ".env file created successfully"
           ENVEOF
         else
-          echo "⚠️  No environment variables provided, skipping .env creation"
+          echo "No environment variables provided, skipping .env creation"
         fi
 
     - name: Deploy with Docker Compose
