@@ -113,9 +113,9 @@ runs:
         DEPLOYMENT_PATH: ${{ steps.setup.outputs.deployment_path }}
         COMPOSE_FILE: ${{ inputs.compose_file }}
       run: |
-        ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} << 'DEPLOYEOF'
+        ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} COMPOSE_FILE="$COMPOSE_FILE" DEPLOYMENT_PATH="$DEPLOYMENT_PATH" bash << 'DEPLOYEOF'
           set -e
-          cd $DEPLOYMENT_PATH
+          cd "$DEPLOYMENT_PATH"
           
           # Create network if it doesn't exist
           docker network inspect edge > /dev/null 2>&1 || docker network create edge
@@ -125,28 +125,28 @@ runs:
           docker pull postgres:18-alpine || true
           
           # Build with cache
-          DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose -f $COMPOSE_FILE build
+          DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker compose -f "$COMPOSE_FILE" build
           
           # Stop old containers
-          docker compose -f $COMPOSE_FILE down || true
+          docker compose -f "$COMPOSE_FILE" down || true
           
           # Start new containers
-          docker compose -f $COMPOSE_FILE up -d
+          docker compose -f "$COMPOSE_FILE" up -d
           
           # Wait for services to be ready
           sleep 10
           
           # Run migrations if backend service exists
-          if docker compose -f $COMPOSE_FILE ps --services 2>/dev/null | grep -q backend; then
-            docker compose -f $COMPOSE_FILE exec -T backend npx prisma migrate deploy 2>/dev/null || \
-            docker compose -f $COMPOSE_FILE run --rm backend npx prisma migrate deploy 2>/dev/null || true
+          if docker compose -f "$COMPOSE_FILE" ps --services 2>/dev/null | grep -q backend; then
+            docker compose -f "$COMPOSE_FILE" exec -T backend npx prisma migrate deploy 2>/dev/null || \
+            docker compose -f "$COMPOSE_FILE" run --rm backend npx prisma migrate deploy 2>/dev/null || true
           fi
           
           # Cleanup old images
           docker image prune -f
           
           # Show status
-          docker compose -f $COMPOSE_FILE ps
+          docker compose -f "$COMPOSE_FILE" ps
         DEPLOYEOF
 
     - name: Verify deployment
