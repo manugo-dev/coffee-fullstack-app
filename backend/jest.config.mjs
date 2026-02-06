@@ -6,7 +6,7 @@ export default {
     "^.+\\.(t|j)s$": "ts-jest",
   },
   moduleNameMapper: {
-    "^~prisma/client$": "<rootDir>/../generated/prisma",
+    "^~prisma/client$": "<rootDir>/../prisma/generated/client",
     "^prisma.config$": "<rootDir>/../prisma.config",
   },
   collectCoverageFrom: [

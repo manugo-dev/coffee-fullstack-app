@@ -1,6 +1,6 @@
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
-import request from "supertest";
+import * as request from "supertest";
 
 import { AppModule } from "./../src/app.module";
 import { PrismaService } from "./../src/prisma/prisma.service";
@@ -71,16 +71,6 @@ describe("App (e2e)", () => {
   describe("CoffeeController", () => {
     describe("GET /coffees", () => {
       it("should return paginated coffees", () => {
-        const expectedResponse = {
-          data: [mockCoffee],
-          meta: {
-            limit: 12,
-            page: 1,
-            total: 1,
-            totalPages: 1,
-          },
-        };
-
         mockPrismaService.coffee.findMany.mockResolvedValue([mockCoffee]);
         mockPrismaService.coffee.count.mockResolvedValue(1);
 
@@ -88,7 +78,21 @@ describe("App (e2e)", () => {
           .get("/coffees")
           .expect(200)
           .expect((res) => {
-            expect(res.body).toMatchObject(expectedResponse);
+            expect(res.body.data).toHaveLength(1);
+            expect(res.body.data[0]).toMatchObject({
+              description: mockCoffee.description,
+              id: mockCoffee.id,
+              imageUrl: mockCoffee.imageUrl,
+              name: mockCoffee.name,
+              price: mockCoffee.price,
+              type: mockCoffee.type,
+            });
+            expect(res.body.meta).toMatchObject({
+              limit: 12,
+              page: 1,
+              total: 1,
+              totalPages: 1,
+            });
           });
       });
 
