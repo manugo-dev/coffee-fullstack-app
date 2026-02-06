@@ -1,21 +1,21 @@
 .tabs {
   display: inline-flex;
   padding: var(--space-xxs);
-  background-color: var(--color-bg-secondary);
   border-radius: var(--radius-pill);
+  background-color: var(--color-bg-secondary);
 }
 
 .tab {
   position: relative;
   padding: var(--space-sm) var(--space-xl);
-  font-size: var(--font-size-sm);
-  font-family: inherit;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  background: transparent;
-  border: none;
+  border: 0;
   border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-secondary);
   cursor: pointer;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   transition: color var(--transition-fast);
 
   &:hover:not([data-active]) {
@@ -29,10 +29,10 @@
 
 .indicator {
   position: absolute;
-  inset: 0;
-  background-color: var(--color-text-primary);
-  border-radius: var(--radius-pill);
   z-index: 0;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-text-primary);
+  inset: 0;
 }
 
 .label {

@@ -1,9 +1,9 @@
 .pagination {
   display: flex;
-  gap: var(--space-xxs);
   align-items: center;
   justify-content: center;
   margin-top: var(--space-xl);
+  gap: var(--space-xxs);
 
   @include from-breakpoint(md) {
     gap: var(--space-xs);
@@ -12,19 +12,20 @@
 
 .button {
   display: flex;
-  align-items: center;
-  justify-content: center;
   min-width: 30px;
   height: 30px;
+  align-items: center;
+  justify-content: center;
   padding: var(--space-xxs);
-  color: var(--color-text-primary);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
-  background-color: transparent;
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-full);
+  background-color: transparent;
+  color: var(--color-text-primary);
   cursor: pointer;
-  transition: background-color var(--transition-fast),
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition:
+    background-color var(--transition-fast),
     border-color var(--transition-fast);
 
   @include from-breakpoint(md) {
@@ -34,9 +35,9 @@
   }
 
   &:hover:not(:disabled) {
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-tertiary);
     border-color: var(--color-border-active);
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
   }
 
   &:disabled {
@@ -46,9 +47,9 @@
   }
 
   &[data-active="true"] {
-    color: var(--color-text-inverse);
-    background-color: var(--color-accent);
     border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-text-inverse);
   }
 }
 

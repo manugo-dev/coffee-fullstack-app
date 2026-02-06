@@ -6,17 +6,17 @@
 
 .sprite {
   position: absolute;
+  z-index: -1;
   bottom: 2rem;
   left: -7rem;
+  display: none;
+  overflow: hidden;
   width: 16rem;
   height: 11rem;
   background-image: url("/images/coffee-sprites.png");
-  background-size: contain;
   background-repeat: no-repeat;
+  background-size: contain;
   transform: rotate(30deg);
-  overflow: hidden;
-  z-index: -1;
-  display: none;
 
   @include from-breakpoint(md) {
     display: block;
@@ -39,9 +39,9 @@
 
 .actions {
   display: flex;
-  gap: var(--space-md);
   justify-content: center;
   margin-top: var(--space-md);
+  gap: var(--space-md);
 }
 
 .error {

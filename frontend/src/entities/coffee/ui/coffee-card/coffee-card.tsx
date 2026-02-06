@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import type { Coffee } from "../../model/types";
 
 import styles from "./coffee-card.module.scss";
@@ -20,13 +18,13 @@ export function CoffeeCard({ coffee }: CoffeeCardProps) {
         {coffee.type}
       </span>
       <div className={styles.image_wrapper}>
-        <Image
-          src={coffee.imageUrl}
-          alt={coffee.name}
-          className={styles.image}
-          width={260}
-          height={210}
-        />
+        <picture>
+          <img
+            src={coffee.imageUrl}
+            alt={coffee.name}
+            className={styles.image}
+          />
+        </picture>
       </div>
       <div className={styles.content}>
         <h3 className={styles.name}>{coffee.name}</h3>

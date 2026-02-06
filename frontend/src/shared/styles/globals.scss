@@ -22,9 +22,9 @@ body {
   color: var(--color-text-primary);
   font-family: var(--font-primary);
   font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: var(--line-height-base);
 }
 
 img {
@@ -46,20 +46,20 @@ a {
 .container {
   display: flex;
   width: 100%;
-  flex-direction: column;
   max-width: var(--page-max-width);
-  margin: 0 auto;
+  flex-direction: column;
   padding: 0 var(--space-md);
+  margin: 0 auto;
 }
 
 .section_title {
   margin: 0 0 var(--space-xl);
   color: var(--color-text-primary);
-  font-weight: var(--font-weight-regular);
-  font-size: var(--font-size-2xl);
   font-family: var(--font-display);
-  text-transform: uppercase;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-regular);
   text-align: center;
+  text-transform: uppercase;
 
   @include from-breakpoint(md) {
     font-size: var(--font-size-3xl);
@@ -68,18 +68,18 @@ a {
 
 .button {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: var(--space-md);
+  justify-content: center;
+  padding: var(--space-md) var(--space-lg);
+  border: 0;
+  border-radius: var(--radius-pill);
   background: var(--color-accent);
   color: var(--color-text-primary);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
-  font-family: var(--font-secondary);
-  padding: var(--space-md) var(--space-lg);
-  border-radius: var(--radius-pill);
-  border: none;
   cursor: pointer;
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  gap: var(--space-md);
 
   &:hover {
     background: var(--color-accent-hover);

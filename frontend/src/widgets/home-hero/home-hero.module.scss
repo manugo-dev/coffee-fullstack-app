@@ -1,18 +1,16 @@
 .hero {
   display: flex;
+  width: 100%;
+  min-height: 80vh;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   background-color: var(--color-bg-primary);
   background-image: url("/images/hero-bg.jpg");
   background-position: right;
-  background-size: cover;
-  min-height: 80vh;
-  background-repeat: no-repeat;
-  width: 100%;
   background-position: 50% 100%;
-  justify-content: center;
-  align-items: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 
   @include from-breakpoint(md) {
     background-position: 20% 100%;
@@ -22,25 +20,25 @@
 .hero_content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   padding: 0 var(--space-2xl) 0;
 
   @include from-breakpoint(md) {
-    justify-content: center;
     align-items: flex-start;
+    justify-content: center;
   }
 }
 
 .hero_title {
+  margin: 0 0 var(--space-sm);
   color: var(--color-text-primary);
+  font-family: var(--font-display);
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-regular);
-  font-family: var(--font-display);
   line-height: var(--line-height-tight);
-  margin: 0 0 var(--space-sm);
-  text-transform: uppercase;
   text-align: center;
+  text-transform: uppercase;
 
   @include from-breakpoint(md) {
     font-size: var(--font-size-5xl);
@@ -49,11 +47,11 @@
 }
 
 .hero_description {
+  margin: 0 0 var(--space-lg);
   color: var(--color-text-secondary);
+  font-family: var(--font-secondary);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-regular);
-  font-family: var(--font-secondary);
-  margin: 0 0 var(--space-lg);
   text-align: center;
 
   @include from-breakpoint(md) {

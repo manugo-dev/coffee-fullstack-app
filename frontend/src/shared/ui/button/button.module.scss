@@ -1,16 +1,18 @@
 .button {
   display: inline-flex;
-  gap: var(--space-xs);
   align-items: center;
   justify-content: center;
-  font-weight: var(--font-weight-medium);
-  font-family: inherit;
   border: 1px solid transparent;
   border-radius: var(--radius-pill);
-  cursor: pointer;
   color: var(--color-text-primary);
-  transition: background-color var(--transition-fast),
-    border-color var(--transition-fast), color var(--transition-fast);
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: var(--font-weight-medium);
+  gap: var(--space-xs);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
 
   &:hover {
     box-shadow: var(--shadow-lg);
@@ -41,48 +43,48 @@
   }
 
   &[data-variant="primary"] {
-    color: var(--color-text-primary);
-    background-color: var(--color-accent);
     border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-text-primary);
 
     &:hover:not(:disabled) {
-      background-color: var(--color-accent-hover);
       border-color: var(--color-accent-hover);
+      background-color: var(--color-accent-hover);
     }
 
     &:active:not(:disabled) {
-      background-color: var(--color-accent-active);
       border-color: var(--color-accent-active);
+      background-color: var(--color-accent-active);
     }
   }
 
   &[data-variant="secondary"] {
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-tertiary);
     border-color: var(--color-bg-tertiary);
+    background-color: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
 
     &:hover:not(:disabled) {
-      background-color: var(--color-bg-muted);
       border-color: var(--color-bg-muted);
+      background-color: var(--color-bg-muted);
     }
   }
 
   &[data-variant="outline"] {
-    color: var(--color-text-primary);
-    background-color: var(--color-bg-transparent);
     border-color: var(--color-border-accent);
+    background-color: var(--color-bg-transparent);
+    color: var(--color-text-primary);
 
     &:hover:not(:disabled) {
-      background-color: var(--color-bg-tertiary);
       border-color: var(--color-border-active);
+      background-color: var(--color-bg-tertiary);
     }
   }
 
   &[data-variant="ghost"] {
-    color: var(--color-text-primary);
+    border: 0;
     background-color: transparent;
     box-shadow: none;
-    border: none;
+    color: var(--color-text-primary);
 
     &:hover:not(:disabled) {
       color: var(--color-text-secondary);

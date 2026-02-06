@@ -1,7 +1,7 @@
 .wrapper {
   display: flex;
-  flex-direction: column;
   width: 100%;
+  flex-direction: column;
 }
 
 .filters {
@@ -13,8 +13,8 @@
 .list {
   position: relative;
   display: flex;
-  flex-direction: column;
   width: 100%;
+  flex-direction: column;
   transition: opacity 0.2s ease;
 
   &[data-fetching] {
@@ -30,25 +30,25 @@
 }
 
 .spinner {
-  visibility: hidden;
-  width: 100%;
-  height: 100%;
   position: absolute;
-  display: flex;
-  align-items: flex-start;
-  padding-top: var(--space-6xl);
-  justify-content: center;
+  z-index: var(--z-modal);
   top: 0;
   left: 0;
-  z-index: var(--z-modal);
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: var(--space-6xl);
+  visibility: hidden;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: var(--space-lg);
   max-width: 100%;
   padding: 0 var(--space-md);
+  gap: var(--space-lg);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
 
   @include from-breakpoint(lg) {
     grid-template-columns: repeat(3, 1fr);
@@ -57,11 +57,11 @@
 
 .empty {
   display: flex;
+  min-height: 30vh;
   align-items: center;
   justify-content: center;
-  min-height: 30vh;
-  text-align: center;
+  color: var(--color-text-tertiary);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-tertiary);
+  text-align: center;
 }
