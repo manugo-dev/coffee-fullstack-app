@@ -1,0 +1,13 @@
+{
+    "*.{ts,tsx}": [
+        "eslint",
+        "prettier"
+    ],
+    "*.{css,scss}": [
+        "prettier",
+        "stylelint"
+    ],
+    "*.{js,jsx,json,css,scss,md}": [
+        "prettier"
+    ]
+}

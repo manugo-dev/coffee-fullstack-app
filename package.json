@@ -6,6 +6,7 @@
   "description": "MVST Coffee Code Challenge - Monorepo",
   "scripts": {
     "prepare": "husky",
+    "lint-staged": "lint-staged",
     "lint": "npm run lint:frontend && npm run lint:backend",
     "lint:frontend": "npm run lint --prefix frontend",
     "lint:backend": "npm run lint --prefix backend",
@@ -18,7 +19,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "husky": "^9.1.7",
-    "lint-staged": "^16.1.1",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.8.1"
   },
   "engines": {
