@@ -5,6 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_call:
 
 jobs:
   lint-and-test-backend:
@@ -30,9 +31,9 @@ jobs:
         working-directory: ./backend
         run: npm run prisma:gen
 
-      - name: Lint backend
+      - name: Type check backend
         working-directory: ./backend
-        run: npm run lint
+        run: npm run typecheck
 
       - name: Run backend unit tests
         working-directory: ./backend
