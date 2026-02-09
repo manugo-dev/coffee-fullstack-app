@@ -11,6 +11,40 @@ read the READMEs inside the frontend and backend folders.
 
 [Frontend README](frontend/README.md)
 
+## Local con Docker (Postgres + Backend + Frontend)
+
+```bash
+# Crear .env con al menos (o usar defaults):
+# POSTGRES_USER=postgres
+# POSTGRES_PASSWORD=postgres
+# POSTGRES_DB=mvst_coffee_db
+
+docker compose -f docker-compose.local.yml up -d
+# Backend: http://localhost:5000  Frontend: http://localhost:3000
+```
+
+## Coolify + tags de release
+
+- Coolify se encargará de los despliegues (un proyecto apuntando a `main` y otro a `develop`).
+- Este repo solo hace **CI** y, en caso de push a `main` o `develop`, crea automáticamente un **tag de release** cuando todas las pruebas pasan.
+
+### Flujo
+
+- **Ramas:** `main` (prod) y `develop` (dev).
+- En cada push directo a `main` o `develop`:
+  - Se ejecuta el workflow `CI` (`.github/workflows/ci.yml`).
+  - Si backend y frontend pasan lint, tests y build, se crea y pushea un tag con patrón:
+
+    `release-<branch>-<YYYYMMDD-HHMMSS>-<short_sha>`
+
+    Ejemplos:
+    - `release-main-20260209-153045-a1b2c3d`
+    - `release-develop-20260209-101500-abcdef1`
+
+- En Coolify puedes configurar:
+  - App de **dev** para desplegar cuando haya nuevos tags que empiecen por `release-develop-`.
+  - App de **prod** para desplegar cuando haya nuevos tags que empiecen por `release-main-`.
+
 ## Introduction
 
 This code challenge is a project that already contains a very basic backend and frontend structure.
