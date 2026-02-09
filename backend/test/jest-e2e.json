@@ -11,5 +11,11 @@
     "^prisma\\.config$": "<rootDir>/../prisma.config.ts"
   },
   "preset": "ts-jest",
-  "extensionsToTreatAsEsm": []
+  "extensionsToTreatAsEsm": [],
+  "setupFilesAfterEnv": [],
+  "globals": {
+    "ts-jest": {
+      "isolatedModules": true
+    }
+  }
 }
